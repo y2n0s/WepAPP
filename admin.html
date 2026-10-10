@@ -29,6 +29,13 @@ td small{display:block;color:#6b5b70}
 .miss{color:#a33}
 .btn.s{padding:6px 12px;font-size:13px}
 .acts{display:flex;gap:6px}
+.pg{display:flex;gap:10px;align-items:center;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.pg select{width:auto}.pg .btn:disabled{opacity:.4;cursor:default}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--plum);color:#fff}
+.dh button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer}
+#cam{padding:0;overflow:hidden}
+#rd{width:100%;min-height:240px;background:#000}
+#rm{padding:12px;margin:0;text-align:center;font-size:14px}
 th{background:#faf3f5;position:sticky;top:0}
 td img{width:38px;height:38px;object-fit:contain}
 .off{opacity:.5}
@@ -53,6 +60,7 @@ dialog::backdrop{background:#2A223088}
   <div class="tb">
     <input id="s" type="search" placeholder="ابحث بالاسم أو الباركود أو الماركة">
     <button class="btn g" id="add">+ منتج جديد</button>
+    <button class="btn o" id="tscan" hidden>📷 مسح باركود</button>
     <button class="btn o" id="imp">استيراد Excel</button>
     <button class="btn o" id="exp">تصدير Excel</button>
     <button class="btn o" id="out">خروج</button>
@@ -62,13 +70,15 @@ dialog::backdrop{background:#2A223088}
     <thead><tr><th>صورة</th><th>الباركود</th><th>المنتج</th><th>الماركة</th><th>التصنيف</th><th></th></tr></thead>
     <tbody id="tb"></tbody>
   </table></div>
-  <p id="cnt" style="color:#6b5b70"></p>
+  <div class="pg"><button class="btn o s" id="pp">السابق</button><span id="pi"></span><button class="btn o s" id="pn">التالي</button>
+    <select id="ps" aria-label="عدد المنتجات في الصفحة"><option value="20">20 في الصفحة</option><option value="50">50 في الصفحة</option><option value="100">100 في الصفحة</option></select></div>
+  <p id="cnt" style="color:#6b5b70;text-align:center"></p>
   <p style="text-align:center;font-size:13px;color:#6b5b70">تصميم وبرمجة: <b style="color:var(--plum)">يونس البحر</b> · Design &amp; development: <b style="color:var(--plum)">Younes AL-Bahar</b></p>
 </div>
 
 <dialog id="dlg"><form method="dialog" id="fm">
   <div class="fg">
-    <label>الباركود<input name="barcode"></label>
+    <label>الباركود<span style="display:flex;gap:6px"><input name="barcode" inputmode="numeric"><button type="button" class="btn s" id="fscan" hidden aria-label="مسح بالكاميرا">📷</button></span></label>
     <label>الماركة بالعربية<input name="brand_ar" required></label>
     <label>Brand in English<input name="brand_en" dir="ltr" required></label>
     <label>التصنيف بالعربية<input name="category_ar" required></label>
@@ -85,15 +95,17 @@ dialog::backdrop{background:#2A223088}
     <button class="btn" type="submit">حفظ</button>
   </div>
 </form></dialog>
+<dialog id="cam"><div class="dh"><b>مسح باركود</b><button id="cclose" type="button" aria-label="إغلاق">×</button></div><div id="rd"></div><p id="rm"></p></dialog>
 <div id="st" role="status"></div>
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbw9eTcGMp7MyLTrRdzr_86tLuNCPBZQ5DHCVZQLyjday8cCdncijRUWz5R9wQf00fl7/exec';
 const COLS=['id','barcode','brand_ar','brand_en','category_ar','category_en','name_ar','name_en','description_ar','description_en','image','active'];
 const $=id=>document.getElementById(id);
-const lib=()=>window.XLSX?Promise.resolve():new Promise((ok,no)=>{const e=document.createElement('script');e.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';e.onload=ok;e.onerror=no;document.head.appendChild(e)});
+const XL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',QR='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js',libs={};
+const lib=(u,g)=>window[g]?Promise.resolve():(libs[u]=libs[u]||new Promise((ok,no)=>{const e=document.createElement('script');e.src=u;e.onload=ok;e.onerror=()=>{delete libs[u];no(new Error('load'))};document.head.appendChild(e)}));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let P=[],pw=sessionStorage.getItem('pw')||'',editId='';
+let page=1,size=20,P=[],pw=sessionStorage.getItem('pw')||'',editId='';
 
 function toast(m,ms=2500){const s=$('st');s.textContent=m;s.style.display='block';clearTimeout(toast.t);if(ms)toast.t=setTimeout(()=>s.style.display='none',ms)}
 async function post(body){
@@ -108,9 +120,10 @@ const bi=(a,e)=>(a||e)?`${esc(a)||'<span class="miss">—</span>'}<small dir="lt
 function render(){
   const q=$('s').value.trim().toLowerCase();
   const l=P.filter(p=>!q||COLS.map(c=>p[c]).join(' ').toLowerCase().includes(q));
-  $('tb').innerHTML=l.slice(0,200).map(p=>`<tr class="${String(p.active).toLowerCase()==='false'?'off':''}"><td>${p.image?`<img src="${esc(p.image)}" alt="">`:''}</td><td class="nw">${esc(p.barcode)}</td><td>${bi(p.name_ar,p.name_en)}</td><td>${bi(p.brand_ar,p.brand_en)}</td><td>${bi(p.category_ar,p.category_en)}</td>
+  const pages=Math.max(1,Math.ceil(l.length/size));if(page>pages)page=pages;
+  $('tb').innerHTML=l.slice((page-1)*size,page*size).map(p=>`<tr class="${String(p.active).toLowerCase()==='false'?'off':''}"><td>${p.image?`<img src="${esc(p.image)}" alt="">`:''}</td><td class="nw">${esc(p.barcode)}</td><td>${bi(p.name_ar,p.name_en)}</td><td>${bi(p.brand_ar,p.brand_en)}</td><td>${bi(p.category_ar,p.category_en)}</td>
   <td class="nw"><div class="acts"><button class="btn o s" data-e="${esc(p.id)}">تعديل</button><button class="btn r s" data-d="${esc(p.id)}">حذف</button></div></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;padding:30px">لا توجد منتجات. أضف منتجاً أو استورد ملف Excel.</td></tr>';
-  $('cnt').textContent=`${l.length} من ${P.length} منتج`+(l.length>200?' — يعرض أول 200، استخدم البحث للباقي':'');
+  $('cnt').textContent=`${l.length} من ${P.length} منتج`;$('pi').textContent=`صفحة ${page} من ${pages}`;$('pp').disabled=page<=1;$('pn').disabled=page>=pages;
 }
 function enter(){$('login').style.display='none';$('app').style.display='block';load().catch(()=>toast('تعذر تحميل المنتجات',0))}
 
@@ -119,7 +132,40 @@ $('login').onsubmit=async e=>{
   try{await post({action:'check'});sessionStorage.setItem('pw',pw);enter()}catch(x){$('le').textContent=x.message}
 };
 $('out').onclick=()=>{sessionStorage.removeItem('pw');location.reload()};
-let dt;$('s').oninput=()=>{clearTimeout(dt);dt=setTimeout(render,180)};
+let dt;$('s').oninput=()=>{clearTimeout(dt);dt=setTimeout(()=>{page=1;render()},180)};
+
+const go=n=>{page=n;render();window.scrollTo({top:0})};
+$('pp').onclick=()=>go(page-1);$('pn').onclick=()=>go(page+1);
+$('ps').onchange=e=>{size=+e.target.value;go(1)};
+
+// ===== مسح الباركود بالكاميرا =====
+let sc=null,done=false,busy=Promise.resolve(),onCode=null;
+const mobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1);
+if(mobile&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){$('tscan').hidden=false;$('fscan').hidden=false}
+const stopScan=()=>{busy=busy.then(async()=>{const x=sc;sc=null;if(x){try{await x.stop()}catch(e){}try{x.clear()}catch(e){}}$('rd').innerHTML=''}).catch(()=>{})};
+async function startScan(){
+  done=false;$('rm').textContent='وجّه الكاميرا نحو الباركود';
+  if(!$('cam').open)$('cam').showModal();
+  try{
+    await lib(QR,'Html5Qrcode');
+    if(!$('cam').open)return;
+    const F=Html5QrcodeSupportedFormats;
+    const x=new Html5Qrcode('rd',{formatsToSupport:[F.EAN_13,F.EAN_8,F.UPC_A,F.UPC_E,F.CODE_128,F.CODE_39],verbose:false,useBarCodeDetectorIfSupported:true});
+    sc=x;
+    await x.start({facingMode:'environment'},{fps:15,qrbox:(w,h)=>({width:Math.floor(w*.9),height:Math.min(150,h)})},code=>{
+      if(done)return;done=true;const cb=onCode;$('cam').close();if(cb)cb(code);
+    },()=>{});
+  }catch(e){sc=null;$('rm').textContent='تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدامها ثم أعد المحاولة.'}
+}
+const scan=cb=>{onCode=cb;busy=busy.then(startScan).catch(()=>{})};
+$('cclose').onclick=()=>$('cam').close();$('cam').onclose=stopScan;
+$('fscan').onclick=()=>scan(code=>{$('fm').elements.barcode.value=code});
+$('tscan').onclick=()=>scan(code=>{
+  const z=v=>String(v).replace(/^0+/,'');
+  const m=P.find(p=>p.barcode===code)||P.find(p=>p.barcode&&z(p.barcode)===z(code));
+  if(m){$('s').value=m.barcode;page=1;render();return}
+  if(confirm(`لا يوجد منتج بالباركود ${code}. هل تريد إضافة منتج جديد به؟`)){editId='';$('fm').reset();$('fm').elements.barcode.value=code;$('dlg').showModal()}
+});
 
 $('add').onclick=()=>{editId='';$('fm').reset();$('dlg').showModal()};
 $('cx').onclick=()=>$('dlg').close();
@@ -133,7 +179,7 @@ $('fm').onsubmit=async e=>{
   try{toast('جاري الحفظ...',0);await post({action:'save',products:[p]});await load();toast('تم الحفظ')}catch(x){toast(x.message)}
 };
 
-$('exp').onclick=async()=>{await lib();
+$('exp').onclick=async()=>{await lib(XL,'XLSX');
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(P.map(p=>Object.fromEntries(COLS.map(c=>[c,p[c]??'']))),{header:COLS}),'Products');
   XLSX.writeFile(wb,'products.xlsx');
@@ -142,7 +188,7 @@ $('imp').onclick=()=>$('f').click();
 $('f').onchange=async e=>{
   const file=e.target.files[0];if(!file)return;e.target.value='';
   try{
-    await lib();const wb=XLSX.read(await file.arrayBuffer());
+    await lib(XL,'XLSX');const wb=XLSX.read(await file.arrayBuffer());
     const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:'',raw:false});
     const items=rows.map(r=>{
       const p={};COLS.forEach(c=>p[c]=String(r[c]??'').trim());
