@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#3E1F47">
+<title>شركة جدة الرائدة | منتجات العناية والتجميل بالجملة</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--plum:#3E1F47;--blush:#F7ECEF;--gold:#B7862F;--ink:#2A2230;--line:#E6D9DE;--paper:#fff}
+*{box-sizing:border-box}
+body{margin:0;font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--ink);background:var(--blush);padding-bottom:84px}
+header{background:var(--plum);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header h1{margin:0;font-size:20px;font-weight:700;flex:1;min-width:150px}
+header small{display:block;font-weight:400;font-size:12px;opacity:.8}
+button,select,input{font:inherit}
+.lang{background:none;border:1px solid #fff8;color:#fff;border-radius:6px;padding:5px 12px;cursor:pointer}
+.bar{display:flex;gap:10px;flex-wrap:wrap;padding:14px 18px;position:sticky;top:0;background:var(--blush);z-index:5;border-bottom:1px solid var(--line)}
+.bar input,.bar select{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;min-width:150px;flex:1}
+.bar input:focus,.bar select:focus,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+main{padding:18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.card img,.ph{width:100%;aspect-ratio:1;object-fit:contain;background:#fff}
+.ph{display:grid;place-items:center;color:var(--line);font-size:38px}
+.cb{padding:10px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+.brand{color:var(--gold);font-weight:600;font-size:13px}
+.nm{font-weight:600;font-size:15px;line-height:1.4}
+.bc{direction:ltr;max-width:100%;height:auto;margin-top:auto}
+.add{background:var(--plum);color:#fff;border:0;padding:10px;cursor:pointer;font-weight:600}
+.add.in{background:var(--gold)}
+.msg{grid-column:1/-1;text-align:center;padding:40px;color:#6b5b70}
+#fab{position:fixed;inset-inline:18px;bottom:16px;background:var(--gold);color:#fff;border:0;border-radius:12px;padding:15px;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 6px 18px #3E1F4755}
+#fab[hidden]{display:none}
+dialog{border:0;border-radius:14px;padding:0;width:min(560px,94vw);max-height:90vh}
+dialog::backdrop{background:#2A223088}
+.dh{padding:14px 18px;background:var(--plum);color:#fff;display:flex;justify-content:space-between;align-items:center}
+.dh button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer}
+.items{padding:6px 18px;max-height:38vh;overflow:auto}
+.it{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.it span{flex:1;font-size:14px}
+.it input{width:64px;padding:6px;border:1px solid var(--line);border-radius:6px;text-align:center}
+.it button{background:none;border:0;color:#a33;cursor:pointer;font-size:18px}
+.form{padding:14px 18px;display:grid;gap:10px}
+.form input{padding:10px;border:1px solid var(--line);border-radius:8px}
+.send{background:#1f8f4e;color:#fff;border:0;border-radius:10px;padding:13px;font-weight:700;cursor:pointer}
+@media (prefers-reduced-motion:no-preference){.add{transition:background .15s}}
+</style>
+</head>
+<body>
+<header>
+  <h1>شركة جدة الرائدة<small id="sub"></small></h1>
+  <button class="lang" id="lg"></button>
+</header>
+<div class="bar">
+  <input id="q" type="search">
+  <select id="fc"></select>
+  <select id="fb"></select>
+</div>
+<main id="grid"></main>
+<button id="fab" hidden></button>
+
+<dialog id="dlg">
+  <div class="dh"><b id="dt"></b><button id="cl" aria-label="close">×</button></div>
+  <div class="items" id="items"></div>
+  <div class="form">
+    <input id="n1"><input id="n2"><input id="n3" type="tel">
+    <button class="send" id="sd"></button>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.6/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ===== الإعدادات =====
+const API='https://script.google.com/macros/s/AKfycbw9eTcGMp7MyLTrRdzr_86tLuNCPBZQ5DHCVZQLyjday8cCdncijRUWz5R9wQf00fl7/exec';
+const WA='966532459793';
+// =====================
+const T={
+ar:{sub:'منصة الجملة لمنتجات العناية والتجميل',q:'ابحث بالاسم أو الباركود',ac:'كل التصنيفات',ab:'كل الماركات',add:'أضف للطلب',in:'في الطلب ✓',fab:'طلب عرض سعر',empty:'لا توجد منتجات مطابقة للبحث',fail:'تعذر تحميل المنتجات. تحقق من الاتصال وأعد المحاولة.',load:'جاري التحميل...',n1:'الاسم',n2:'الشركة / المتجر',n3:'رقم الجوال',send:'أرسل الطلب عبر واتساب',none:'اختر منتجات لتبدأ طلبك',lang:'English',msg:'السلام عليكم، أرغب في عرض سعر للمنتجات المرفقة في ملف Excel.',pc:' منتج'},
+en:{sub:'Wholesale skincare & beauty',q:'Search by name or barcode',ac:'All categories',ab:'All brands',add:'Add to request',in:'In request ✓',fab:'Request a quote',empty:'No products match your search',fail:'Could not load products. Check your connection and try again.',load:'Loading...',n1:'Name',n2:'Company / store',n3:'Mobile number',send:'Send request via WhatsApp',none:'Pick products to start your request',lang:'العربية',msg:'Hello, I would like a price quote for the products in the attached Excel file.',pc:' items'}
+};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let L=store.get('lang','ar'),P=[],cart=store.get('cart',{});
+const t=k=>T[L][k];
+const nm=p=>(L==='ar'?p.name_ar||p.name_en:p.name_en||p.name_ar)||'';
+
+function ui(){
+  document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+  $('sub').textContent=t('sub');$('q').placeholder=t('q');$('lg').textContent=t('lang');
+  $('dt').textContent=t('fab');$('n1').placeholder=t('n1');$('n2').placeholder=t('n2');$('n3').placeholder=t('n3');$('sd').textContent=t('send');
+  const keep=[$('fc').value,$('fb').value];
+  fill('fc',t('ac'),P.map(p=>p.category),keep[0]);fill('fb',t('ab'),P.map(p=>p.brand),keep[1]);
+  show();cartUI();
+}
+function fill(id,all,vals,cur){
+  const u=[...new Set(vals.filter(Boolean))].sort();
+  $(id).innerHTML=`<option value="">${all}</option>`+u.map(v=>`<option${v===cur?' selected':''}>${esc(v)}</option>`).join('');
+}
+function show(){
+  const q=$('q').value.trim().toLowerCase(),c=$('fc').value,b=$('fb').value;
+  const list=P.filter(p=>(!c||p.category===c)&&(!b||p.brand===b)&&(!q||(nm(p)+' '+p.name_ar+' '+p.name_en+' '+p.brand+' '+p.barcode).toLowerCase().includes(q)));
+  $('grid').innerHTML=list.length?list.map(p=>`<article class="card">${p.image?`<img loading="lazy" src="${esc(p.image)}" alt="${esc(nm(p))}">`:'<div class="ph">✦</div>'}
+  <div class="cb"><span class="brand">${esc(p.brand)}</span><span class="nm">${esc(nm(p))}</span>
+  ${p.barcode?`<svg class="bc" data-c="${esc(p.barcode)}"></svg>`:''}</div>
+  <button class="add${cart[p.id]?' in':''}" data-id="${esc(p.id)}">${cart[p.id]?t('in'):t('add')}</button></article>`).join(''):`<p class="msg">${t('empty')}</p>`;
+  document.querySelectorAll('svg.bc').forEach(s=>{try{JsBarcode(s,s.dataset.c,{format:'CODE128',height:38,width:1.6,fontSize:12,margin:0,background:'#fff'})}catch(e){}});
+}
+function cartUI(){
+  const n=Object.keys(cart).length;
+  $('fab').hidden=!n;$('fab').textContent=`${t('fab')} (${n}${t('pc')})`;
+  $('items').innerHTML=n?P.filter(p=>cart[p.id]).map(p=>`<div class="it"><span>${esc(nm(p))}<br><small>${esc(p.brand)}</small></span><input type="number" min="1" value="${cart[p.id]}" data-q="${esc(p.id)}"><button data-rm="${esc(p.id)}" aria-label="remove">✕</button></div>`).join(''):`<p class="msg">${t('none')}</p>`;
+  if(!n&&$('dlg').open)$('dlg').close();
+}
+function save(){store.set('cart',cart);show();cartUI()}
+
+$('grid').onclick=e=>{const id=e.target.dataset.id;if(!id)return;if(cart[id])delete cart[id];else cart[id]=1;save()};
+$('items').onclick=e=>{const id=e.target.dataset.rm;if(id){delete cart[id];save()}};
+$('items').onchange=e=>{const id=e.target.dataset.q;if(id){cart[id]=Math.max(1,parseInt(e.target.value)||1);store.set('cart',cart)}};
+$('fab').onclick=()=>$('dlg').showModal();$('cl').onclick=()=>$('dlg').close();
+['q','fc','fb'].forEach(i=>$(i).oninput=show);
+$('lg').onclick=()=>{L=L==='ar'?'en':'ar';store.set('lang',L);ui()};
+['n1','n2','n3'].forEach(i=>{$(i).value=store.get(i,'');$(i).onchange=()=>store.set(i,$(i).value)});
+
+$('sd').onclick=async()=>{
+  const items=P.filter(p=>cart[p.id]);if(!items.length)return;
+  const rows=items.map((p,i)=>({'#':i+1,'الباركود / Barcode':String(p.barcode||''),'الماركة / Brand':p.brand,'المنتج':p.name_ar,'Product':p.name_en,'الكمية / Qty':cart[p.id]}));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Quote');
+  const file=new File([XLSX.write(wb,{type:'array',bookType:'xlsx'})],'quote-request.xlsx',{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const msg=`${t('msg')}\n${t('n1')}: ${$('n1').value}\n${t('n2')}: ${$('n2').value}\n${t('n3')}: ${$('n3').value}`;
+  if(navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],text:msg});return}catch(e){if(e.name==='AbortError')return}
+  }
+  const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=file.name;a.click();
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
+};
+
+async function load(){
+  P=store.get('cache',[]);ui();
+  if(!P.length)$('grid').innerHTML=`<p class="msg">${t('load')}</p>`;
+  try{
+    const r=await fetch(API);const d=await r.json();
+    P=(d.products||[]).filter(p=>p.id&&String(p.active).toLowerCase()!=='false').map(p=>({...p,id:String(p.id),barcode:String(p.barcode||'')}));
+    store.set('cache',P);
+  }catch(e){if(!P.length){$('grid').innerHTML=`<p class="msg">${t('fail')}</p>`;return}}
+  ui();
+}
+load();
+</script>
+</body>
+</html>
