@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#3E1F47">
 <title>شركة جدة الرائدة | منتجات العناية والتجميل بالجملة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--plum:#3E1F47;--blush:#F7ECEF;--gold:#B7862F;--ink:#2A2230;--line:#E6D9DE;--paper:#fff}
@@ -44,6 +45,8 @@ dialog::backdrop{background:#2A223088}
 .form{padding:14px 18px;display:grid;gap:10px}
 .form input{padding:10px;border:1px solid var(--line);border-radius:8px}
 .send{background:#1f8f4e;color:#fff;border:0;border-radius:10px;padding:13px;font-weight:700;cursor:pointer}
+.bc:not([viewBox]){height:90px}
+.more{grid-column:1/-1;background:#fff;border:1px solid var(--plum);color:var(--plum);border-radius:8px;padding:12px;font-weight:600;cursor:pointer}
 .scan{background:var(--plum);color:#fff;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600}
 #rd{width:100%;min-height:240px;background:#000}
 #rm{padding:12px 18px;text-align:center;font-size:14px}
@@ -78,23 +81,24 @@ dialog::backdrop{background:#2A223088}
 
 <dialog id="bd"><div class="dh"><b id="bn"></b><button id="bx" aria-label="close">×</button></div><div style="padding:18px;background:#fff"><svg id="bb"></svg></div></dialog>
 
-<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 // ===== الإعدادات =====
 const API='https://script.google.com/macros/s/AKfycbw9eTcGMp7MyLTrRdzr_86tLuNCPBZQ5DHCVZQLyjday8cCdncijRUWz5R9wQf00fl7/exec';
 const WA='966115110811';
 // =====================
 const T={
-ar:{sub:'منصة الجملة لمنتجات العناية والتجميل',q:'ابحث بالاسم أو الباركود',ac:'كل التصنيفات',ab:'كل الماركات',add:'أضف للطلب',in:'في الطلب ✓',fab:'طلب عرض سعر',empty:'لا توجد منتجات مطابقة للبحث',fail:'تعذر تحميل المنتجات. تحقق من الاتصال وأعد المحاولة.',load:'جاري التحميل...',n1:'الاسم',n2:'الشركة / المتجر',n3:'رقم الجوال',send:'أرسل الطلب عبر واتساب',none:'اختر منتجات لتبدأ طلبك',lang:'English',msg:'السلام عليكم، أرغب في عرض سعر للمنتجات المرفقة في ملف Excel.',pc:' منتج',scan:'مسح باركود',scanTip:'وجّه الكاميرا نحو الباركود',camErr:'تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدام الكاميرا ثم أعد المحاولة.',zoom:'اضغط على أي باركود لتكبيره وقراءته بالقارئ'},
-en:{sub:'Wholesale skincare & beauty',q:'Search by name or barcode',ac:'All categories',ab:'All brands',add:'Add to request',in:'In request ✓',fab:'Request a quote',empty:'No products match your search',fail:'Could not load products. Check your connection and try again.',load:'Loading...',n1:'Name',n2:'Company / store',n3:'Mobile number',send:'Send request via WhatsApp',none:'Pick products to start your request',lang:'العربية',msg:'Hello, I would like a price quote for the products in the attached Excel file.',pc:' items',scan:'Scan barcode',scanTip:'Point the camera at the barcode',camErr:'Could not start the camera. Allow camera access in your browser and try again.',zoom:'Tap any barcode to enlarge it for scanning'}
+ar:{sub:'منصة الجملة لمنتجات العناية والتجميل',q:'ابحث بالاسم أو الباركود',ac:'كل التصنيفات',ab:'كل الماركات',add:'أضف للطلب',in:'في الطلب ✓',fab:'طلب عرض سعر',empty:'لا توجد منتجات مطابقة للبحث',fail:'تعذر تحميل المنتجات. تحقق من الاتصال وأعد المحاولة.',load:'جاري التحميل...',n1:'الاسم',n2:'الشركة / المتجر',n3:'رقم الجوال',send:'أرسل الطلب عبر واتساب',none:'اختر منتجات لتبدأ طلبك',lang:'English',msg:'السلام عليكم، أرغب في عرض سعر للمنتجات المرفقة في ملف Excel.',pc:' منتج',more:'عرض المزيد',libfail:'تعذر تحميل أداة الإرسال. تحقق من الاتصال وأعد المحاولة.',scan:'مسح باركود',scanTip:'وجّه الكاميرا نحو الباركود',camErr:'تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدام الكاميرا ثم أعد المحاولة.',zoom:'اضغط على أي باركود لتكبيره وقراءته بالقارئ'},
+en:{sub:'Wholesale skincare & beauty',q:'Search by name or barcode',ac:'All categories',ab:'All brands',add:'Add to request',in:'In request ✓',fab:'Request a quote',empty:'No products match your search',fail:'Could not load products. Check your connection and try again.',load:'Loading...',n1:'Name',n2:'Company / store',n3:'Mobile number',send:'Send request via WhatsApp',none:'Pick products to start your request',lang:'العربية',msg:'Hello, I would like a price quote for the products in the attached Excel file.',pc:' items',more:'Show more',libfail:'Could not load the export tool. Check your connection and try again.',scan:'Scan barcode',scanTip:'Point the camera at the barcode',camErr:'Could not start the camera. Allow camera access in your browser and try again.',zoom:'Tap any barcode to enlarge it for scanning'}
 };
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let L=store.get('lang','ar'),P=[],cart=store.get('cart',{});
+let L=store.get('lang','ar'),P=[],cart=store.get('cart',{}),shown=48;
 const t=k=>T[L][k];
+const libs={};
+const lib=(u,g)=>window[g]?Promise.resolve():(libs[u]=libs[u]||new Promise((ok,no)=>{const e=document.createElement('script');e.src=u;e.onload=ok;e.onerror=()=>{delete libs[u];no(new Error('load'))};document.head.appendChild(e)}));
+const XL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',QR='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js';
 const pick=(p,k)=>(L==='ar'?p[k+'_ar']||p[k+'_en']:p[k+'_en']||p[k+'_ar'])||'';
 const nm=p=>pick(p,'name');
 
@@ -112,14 +116,17 @@ function fill(id,all,k,cur){
   const u=[...m].sort((a,b)=>a[1].localeCompare(b[1],L));
   $(id).innerHTML=`<option value="">${all}</option>`+u.map(([v,l])=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(l)}</option>`).join('');
 }
+const io='IntersectionObserver'in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);bar(e.target,e.target.dataset.c,2,60)}}),{rootMargin:'300px'}):null;
+const mio='IntersectionObserver'in window?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){mio.disconnect();shown+=48;show()}}),{rootMargin:'500px'}):null;
 function show(){
   const q=$('q').value.trim().toLowerCase(),c=$('fc').value,b=$('fb').value;
   const list=P.filter(p=>(!c||key(p,'category')===c)&&(!b||key(p,'brand')===b)&&(!q||(p.name_ar+' '+p.name_en+' '+p.brand_ar+' '+p.brand_en+' '+p.barcode).toLowerCase().includes(q)));
-  $('grid').innerHTML=list.length?list.map(p=>`<article class="card">${p.image?`<img loading="lazy" src="${esc(p.image)}" alt="${esc(nm(p))}">`:'<div class="ph">✦</div>'}
+  $('grid').innerHTML=list.length?list.slice(0,shown).map(p=>`<article class="card">${p.image?`<img loading="lazy" decoding="async" src="${esc(p.image)}" alt="${esc(nm(p))}">`:'<div class="ph">✦</div>'}
   <div class="cb"><span class="brand">${esc(pick(p,'brand'))}</span><span class="nm">${esc(nm(p))}</span>
   ${p.barcode?`<svg class="bc" data-c="${esc(p.barcode)}"></svg>`:''}</div>
-  <button class="add${cart[p.id]?' in':''}" data-id="${esc(p.id)}">${cart[p.id]?t('in'):t('add')}</button></article>`).join(''):`<p class="msg">${t('empty')}</p>`;
-  document.querySelectorAll('svg.bc').forEach(s=>bar(s,s.dataset.c,2,60));
+  <button class="add${cart[p.id]?' in':''}" data-id="${esc(p.id)}">${cart[p.id]?t('in'):t('add')}</button></article>`).join('')+(list.length>shown?`<button class="more" id="more">${t('more')} (${list.length-shown})</button>`:''):`<p class="msg">${t('empty')}</p>`;
+  document.querySelectorAll('svg.bc').forEach(x=>io?io.observe(x):bar(x,x.dataset.c,2,60));
+  const mb=$('more');if(mb&&mio)mio.observe(mb);
 }
 // يرسم الباركود بصيغته الأصلية (EAN-13/UPC/EAN-8) أو Code128، مع هامش أبيض كافٍ يطلبه القارئ
 function bar(s,c,w,h){
@@ -137,18 +144,21 @@ function cartUI(){
 function save(){store.set('cart',cart);show();cartUI()}
 
 $('grid').onclick=e=>{
+  if(e.target.id==='more'){shown+=48;show();return}
   const bc=e.target.closest('svg.bc');
   if(bc){const p=P.find(x=>x.barcode===bc.dataset.c);$('bn').textContent=p?nm(p):'';bar($('bb'),bc.dataset.c,3,130);$('bd').showModal();return}
   const id=e.target.dataset.id;if(!id)return;if(cart[id])delete cart[id];else cart[id]=1;save()};
 $('items').onclick=e=>{const id=e.target.dataset.rm;if(id){delete cart[id];save()}};
 $('items').onchange=e=>{const id=e.target.dataset.q;if(id){cart[id]=Math.max(1,parseInt(e.target.value)||1);store.set('cart',cart)}};
-$('fab').onclick=()=>$('dlg').showModal();$('cl').onclick=()=>$('dlg').close();$('bx').onclick=()=>$('bd').close();
-['q','fc','fb'].forEach(i=>$(i).oninput=show);
+$('fab').onclick=()=>{$('dlg').showModal();lib(XL,'XLSX').catch(()=>{})};$('cl').onclick=()=>$('dlg').close();$('bx').onclick=()=>$('bd').close();
+let dt;$('q').oninput=()=>{clearTimeout(dt);dt=setTimeout(()=>{shown=48;show()},180)};
+['fc','fb'].forEach(i=>$(i).onchange=()=>{shown=48;show()});
 $('lg').onclick=()=>{L=L==='ar'?'en':'ar';store.set('lang',L);ui()};
 ['n1','n2','n3'].forEach(i=>{$(i).value=store.get(i,'');$(i).onchange=()=>store.set(i,$(i).value)});
 
 $('sd').onclick=async()=>{
   const items=P.filter(p=>cart[p.id]);if(!items.length)return;
+  try{await lib(XL,'XLSX')}catch(e){return alert(t('libfail'))}
   const rows=items.map((p,i)=>({'#':i+1,'الباركود / Barcode':String(p.barcode||''),'الماركة':p.brand_ar,'Brand':p.brand_en,'المنتج':p.name_ar,'Product':p.name_en,'الكمية / Qty':cart[p.id]}));
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(rows),'Quote');
@@ -162,24 +172,30 @@ $('sd').onclick=async()=>{
 };
 
 // ===== مسح الباركود بالكاميرا (آيفون وأندرويد) =====
-let sc=null,done=false;
+let sc=null,done=false,busy=Promise.resolve();
 const mobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1);
-if(mobile&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.Html5Qrcode)$('scan').hidden=false;
-async function stopScan(){const x=sc;sc=null;try{if(x){await x.stop();x.clear()}}catch(e){}}
-$('scan').onclick=async()=>{
-  done=false;$('rm').textContent=t('scanTip');$('cam').showModal();
+if(mobile&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)$('scan').hidden=false;
+// تشغيل وإيقاف الكاميرا بالتسلسل حتى لا يتعارض الإيقاف مع التشغيل التالي
+const stopScan=()=>{busy=busy.then(async()=>{const x=sc;sc=null;if(x){try{await x.stop()}catch(e){}try{x.clear()}catch(e){}}$('rd').innerHTML=''}).catch(()=>{})};
+async function startScan(){
+  done=false;$('rm').textContent=t('scanTip');
+  if(!$('cam').open)$('cam').showModal();
   try{
+    await lib(QR,'Html5Qrcode');
+    if(!$('cam').open)return;
     const F=Html5QrcodeSupportedFormats;
-    sc=new Html5Qrcode('rd',{formatsToSupport:[F.EAN_13,F.EAN_8,F.UPC_A,F.UPC_E,F.CODE_128,F.CODE_39],verbose:false});
-    await sc.start({facingMode:'environment'},{fps:10,qrbox:(w,h)=>({width:Math.floor(w*.9),height:Math.min(150,h)})},code=>{
+    const x=new Html5Qrcode('rd',{formatsToSupport:[F.EAN_13,F.EAN_8,F.UPC_A,F.UPC_E,F.CODE_128,F.CODE_39],verbose:false,useBarCodeDetectorIfSupported:true});
+    sc=x;
+    await x.start({facingMode:'environment'},{fps:15,qrbox:(w,h)=>({width:Math.floor(w*.9),height:Math.min(150,h)})},code=>{
       if(done)return;done=true;
-      const z=x=>String(x).replace(/^0+/,'');
+      const z=v=>String(v).replace(/^0+/,'');
       const m=P.find(p=>p.barcode===code)||P.find(p=>p.barcode&&z(p.barcode)===z(code));
-      $('q').value=m?m.barcode:code;$('fc').value='';$('fb').value='';
+      $('q').value=m?m.barcode:code;$('fc').value='';$('fb').value='';shown=48;
       $('cam').close();show();window.scrollTo({top:0,behavior:'smooth'});
     },()=>{});
-  }catch(e){$('rm').textContent=t('camErr')}
-};
+  }catch(e){sc=null;$('rm').textContent=t('camErr')}
+}
+$('scan').onclick=()=>{busy=busy.then(startScan).catch(()=>{})};
 $('cx').onclick=()=>$('cam').close();
 $('cam').onclose=stopScan;
 
@@ -188,8 +204,9 @@ async function load(){
   if(!P.length)$('grid').innerHTML=`<p class="msg">${t('load')}</p>`;
   try{
     const r=await fetch(API);const d=await r.json();
-    P=(d.products||[]).filter(p=>p.id&&String(p.active).toLowerCase()!=='false').map(p=>({...p,id:String(p.id),barcode:String(p.barcode||'')}));
-    store.set('cache',P);
+    const n=(d.products||[]).filter(p=>p.id&&String(p.active).toLowerCase()!=='false').map(p=>({...p,id:String(p.id),barcode:String(p.barcode||'')}));
+    if(P.length&&JSON.stringify(n)===JSON.stringify(P))return;
+    P=n;store.set('cache',P);
   }catch(e){if(!P.length){$('grid').innerHTML=`<p class="msg">${t('fail')}</p>`;return}}
   ui();
 }
