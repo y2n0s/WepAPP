@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#3E1F47">
+<meta name="author" content="يونس البحر / Younes AL-Bahar">
 <title>شركة جدة الرائدة | منتجات العناية والتجميل بالجملة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
@@ -50,6 +51,8 @@ dialog::backdrop{background:#2A223088}
 .scan{background:var(--plum);color:#fff;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600}
 #rd{width:100%;min-height:240px;background:#000}
 #rm{padding:12px 18px;text-align:center;font-size:14px}
+.credit{text-align:center;padding:22px 18px 6px;font-size:13px;color:#6b5b70}
+.credit b{color:var(--plum)}
 @media (prefers-reduced-motion:no-preference){.add{transition:background .15s}}
 </style>
 </head>
@@ -66,6 +69,7 @@ dialog::backdrop{background:#2A223088}
   <small id="hint" style="flex-basis:100%;color:#6b5b70"></small>
 </div>
 <main id="grid"></main>
+<footer class="credit" id="cr"></footer>
 <button id="fab" hidden></button>
 
 <dialog id="dlg">
@@ -88,8 +92,8 @@ const API='https://script.google.com/macros/s/AKfycbw9eTcGMp7MyLTrRdzr_86tLuNCPB
 const WA='966115110811';
 // =====================
 const T={
-ar:{sub:'منصة الجملة لمنتجات العناية والتجميل',q:'ابحث بالاسم أو الباركود',ac:'كل التصنيفات',ab:'كل الماركات',add:'أضف للطلب',in:'في الطلب ✓',fab:'طلب عرض سعر',empty:'لا توجد منتجات مطابقة للبحث',fail:'تعذر تحميل المنتجات. تحقق من الاتصال وأعد المحاولة.',load:'جاري التحميل...',n1:'الاسم',n2:'الشركة / المتجر',n3:'رقم الجوال',send:'أرسل الطلب عبر واتساب',none:'اختر منتجات لتبدأ طلبك',lang:'English',msg:'السلام عليكم، أرغب في عرض سعر للمنتجات المرفقة في ملف Excel.',pc:' منتج',more:'عرض المزيد',libfail:'تعذر تحميل أداة الإرسال. تحقق من الاتصال وأعد المحاولة.',scan:'مسح باركود',scanTip:'وجّه الكاميرا نحو الباركود',camErr:'تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدام الكاميرا ثم أعد المحاولة.',zoom:'اضغط على أي باركود لتكبيره وقراءته بالقارئ'},
-en:{sub:'Wholesale skincare & beauty',q:'Search by name or barcode',ac:'All categories',ab:'All brands',add:'Add to request',in:'In request ✓',fab:'Request a quote',empty:'No products match your search',fail:'Could not load products. Check your connection and try again.',load:'Loading...',n1:'Name',n2:'Company / store',n3:'Mobile number',send:'Send request via WhatsApp',none:'Pick products to start your request',lang:'العربية',msg:'Hello, I would like a price quote for the products in the attached Excel file.',pc:' items',more:'Show more',libfail:'Could not load the export tool. Check your connection and try again.',scan:'Scan barcode',scanTip:'Point the camera at the barcode',camErr:'Could not start the camera. Allow camera access in your browser and try again.',zoom:'Tap any barcode to enlarge it for scanning'}
+ar:{sub:'منصة الجملة لمنتجات العناية والتجميل',q:'ابحث بالاسم أو الباركود',ac:'كل التصنيفات',ab:'كل الماركات',add:'أضف للطلب',in:'في الطلب ✓',fab:'طلب عرض سعر',empty:'لا توجد منتجات مطابقة للبحث',fail:'تعذر تحميل المنتجات. تحقق من الاتصال وأعد المحاولة.',load:'جاري التحميل...',n1:'الاسم',n2:'الشركة / المتجر',n3:'رقم الجوال',send:'أرسل الطلب عبر واتساب',none:'اختر منتجات لتبدأ طلبك',lang:'English',msg:'السلام عليكم، أرغب في عرض سعر للمنتجات المرفقة في ملف Excel.',pc:' منتج',more:'عرض المزيد',credit:'شركة جدة الرائدة · تصميم وبرمجة: <b>يونس البحر</b>',libfail:'تعذر تحميل أداة الإرسال. تحقق من الاتصال وأعد المحاولة.',scan:'مسح باركود',scanTip:'وجّه الكاميرا نحو الباركود',camErr:'تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدام الكاميرا ثم أعد المحاولة.',zoom:'اضغط على أي باركود لتكبيره وقراءته بالقارئ'},
+en:{sub:'Wholesale skincare & beauty',q:'Search by name or barcode',ac:'All categories',ab:'All brands',add:'Add to request',in:'In request ✓',fab:'Request a quote',empty:'No products match your search',fail:'Could not load products. Check your connection and try again.',load:'Loading...',n1:'Name',n2:'Company / store',n3:'Mobile number',send:'Send request via WhatsApp',none:'Pick products to start your request',lang:'العربية',msg:'Hello, I would like a price quote for the products in the attached Excel file.',pc:' items',more:'Show more',credit:'Jadda Al-Raida Co. · Design &amp; development: <b>Younes AL-Bahar</b>',libfail:'Could not load the export tool. Check your connection and try again.',scan:'Scan barcode',scanTip:'Point the camera at the barcode',camErr:'Could not start the camera. Allow camera access in your browser and try again.',zoom:'Tap any barcode to enlarge it for scanning'}
 };
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -104,7 +108,7 @@ const nm=p=>pick(p,'name');
 
 function ui(){
   document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
-  $('sub').textContent=t('sub');$('q').placeholder=t('q');$('hint').textContent=t('zoom');$('scan').textContent='📷 '+t('scan');$('ct').textContent=t('scan');$('lg').textContent=t('lang');
+  $('sub').textContent=t('sub');$('q').placeholder=t('q');$('hint').textContent=t('zoom');$('cr').innerHTML='© '+new Date().getFullYear()+' '+t('credit');$('scan').textContent='📷 '+t('scan');$('ct').textContent=t('scan');$('lg').textContent=t('lang');
   $('dt').textContent=t('fab');$('n1').placeholder=t('n1');$('n2').placeholder=t('n2');$('n3').placeholder=t('n3');$('sd').textContent=t('send');
   const keep=[$('fc').value,$('fb').value];
   fill('fc',t('ac'),'category',keep[0]);fill('fb',t('ab'),'brand',keep[1]);
