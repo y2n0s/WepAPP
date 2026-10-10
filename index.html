@@ -44,6 +44,9 @@ dialog::backdrop{background:#2A223088}
 .form{padding:14px 18px;display:grid;gap:10px}
 .form input{padding:10px;border:1px solid var(--line);border-radius:8px}
 .send{background:#1f8f4e;color:#fff;border:0;border-radius:10px;padding:13px;font-weight:700;cursor:pointer}
+.scan{background:var(--plum);color:#fff;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-weight:600}
+#rd{width:100%;min-height:240px;background:#000}
+#rm{padding:12px 18px;text-align:center;font-size:14px}
 @media (prefers-reduced-motion:no-preference){.add{transition:background .15s}}
 </style>
 </head>
@@ -54,6 +57,7 @@ dialog::backdrop{background:#2A223088}
 </header>
 <div class="bar">
   <input id="q" type="search">
+  <button class="scan" id="scan" hidden></button>
   <select id="fc"></select>
   <select id="fb"></select>
   <small id="hint" style="flex-basis:100%;color:#6b5b70"></small>
@@ -70,8 +74,11 @@ dialog::backdrop{background:#2A223088}
   </div>
 </dialog>
 
+<dialog id="cam"><div class="dh"><b id="ct"></b><button id="cx" aria-label="close">×</button></div><div id="rd"></div><p id="rm"></p></dialog>
+
 <dialog id="bd"><div class="dh"><b id="bn"></b><button id="bx" aria-label="close">×</button></div><div style="padding:18px;background:#fff"><svg id="bb"></svg></div></dialog>
 
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
@@ -80,8 +87,8 @@ const API='https://script.google.com/macros/s/AKfycbw9eTcGMp7MyLTrRdzr_86tLuNCPB
 const WA='966115110811';
 // =====================
 const T={
-ar:{sub:'منصة الجملة لمنتجات العناية والتجميل',q:'ابحث بالاسم أو الباركود',ac:'كل التصنيفات',ab:'كل الماركات',add:'أضف للطلب',in:'في الطلب ✓',fab:'طلب عرض سعر',empty:'لا توجد منتجات مطابقة للبحث',fail:'تعذر تحميل المنتجات. تحقق من الاتصال وأعد المحاولة.',load:'جاري التحميل...',n1:'الاسم',n2:'الشركة / المتجر',n3:'رقم الجوال',send:'أرسل الطلب عبر واتساب',none:'اختر منتجات لتبدأ طلبك',lang:'English',msg:'السلام عليكم، أرغب في عرض سعر للمنتجات المرفقة في ملف Excel.',pc:' منتج',zoom:'اضغط على أي باركود لتكبيره وقراءته بالقارئ'},
-en:{sub:'Wholesale skincare & beauty',q:'Search by name or barcode',ac:'All categories',ab:'All brands',add:'Add to request',in:'In request ✓',fab:'Request a quote',empty:'No products match your search',fail:'Could not load products. Check your connection and try again.',load:'Loading...',n1:'Name',n2:'Company / store',n3:'Mobile number',send:'Send request via WhatsApp',none:'Pick products to start your request',lang:'العربية',msg:'Hello, I would like a price quote for the products in the attached Excel file.',pc:' items',zoom:'Tap any barcode to enlarge it for scanning'}
+ar:{sub:'منصة الجملة لمنتجات العناية والتجميل',q:'ابحث بالاسم أو الباركود',ac:'كل التصنيفات',ab:'كل الماركات',add:'أضف للطلب',in:'في الطلب ✓',fab:'طلب عرض سعر',empty:'لا توجد منتجات مطابقة للبحث',fail:'تعذر تحميل المنتجات. تحقق من الاتصال وأعد المحاولة.',load:'جاري التحميل...',n1:'الاسم',n2:'الشركة / المتجر',n3:'رقم الجوال',send:'أرسل الطلب عبر واتساب',none:'اختر منتجات لتبدأ طلبك',lang:'English',msg:'السلام عليكم، أرغب في عرض سعر للمنتجات المرفقة في ملف Excel.',pc:' منتج',scan:'مسح باركود',scanTip:'وجّه الكاميرا نحو الباركود',camErr:'تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدام الكاميرا ثم أعد المحاولة.',zoom:'اضغط على أي باركود لتكبيره وقراءته بالقارئ'},
+en:{sub:'Wholesale skincare & beauty',q:'Search by name or barcode',ac:'All categories',ab:'All brands',add:'Add to request',in:'In request ✓',fab:'Request a quote',empty:'No products match your search',fail:'Could not load products. Check your connection and try again.',load:'Loading...',n1:'Name',n2:'Company / store',n3:'Mobile number',send:'Send request via WhatsApp',none:'Pick products to start your request',lang:'العربية',msg:'Hello, I would like a price quote for the products in the attached Excel file.',pc:' items',scan:'Scan barcode',scanTip:'Point the camera at the barcode',camErr:'Could not start the camera. Allow camera access in your browser and try again.',zoom:'Tap any barcode to enlarge it for scanning'}
 };
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -93,7 +100,7 @@ const nm=p=>pick(p,'name');
 
 function ui(){
   document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
-  $('sub').textContent=t('sub');$('q').placeholder=t('q');$('hint').textContent=t('zoom');$('lg').textContent=t('lang');
+  $('sub').textContent=t('sub');$('q').placeholder=t('q');$('hint').textContent=t('zoom');$('scan').textContent='📷 '+t('scan');$('ct').textContent=t('scan');$('lg').textContent=t('lang');
   $('dt').textContent=t('fab');$('n1').placeholder=t('n1');$('n2').placeholder=t('n2');$('n3').placeholder=t('n3');$('sd').textContent=t('send');
   const keep=[$('fc').value,$('fb').value];
   fill('fc',t('ac'),'category',keep[0]);fill('fb',t('ab'),'brand',keep[1]);
@@ -153,6 +160,28 @@ $('sd').onclick=async()=>{
   const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=file.name;a.click();
   window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
 };
+
+// ===== مسح الباركود بالكاميرا (آيفون وأندرويد) =====
+let sc=null,done=false;
+const mobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1);
+if(mobile&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.Html5Qrcode)$('scan').hidden=false;
+async function stopScan(){const x=sc;sc=null;try{if(x){await x.stop();x.clear()}}catch(e){}}
+$('scan').onclick=async()=>{
+  done=false;$('rm').textContent=t('scanTip');$('cam').showModal();
+  try{
+    const F=Html5QrcodeSupportedFormats;
+    sc=new Html5Qrcode('rd',{formatsToSupport:[F.EAN_13,F.EAN_8,F.UPC_A,F.UPC_E,F.CODE_128,F.CODE_39],verbose:false});
+    await sc.start({facingMode:'environment'},{fps:10,qrbox:(w,h)=>({width:Math.floor(w*.9),height:Math.min(150,h)})},code=>{
+      if(done)return;done=true;
+      const z=x=>String(x).replace(/^0+/,'');
+      const m=P.find(p=>p.barcode===code)||P.find(p=>p.barcode&&z(p.barcode)===z(code));
+      $('q').value=m?m.barcode:code;$('fc').value='';$('fb').value='';
+      $('cam').close();show();window.scrollTo({top:0,behavior:'smooth'});
+    },()=>{});
+  }catch(e){$('rm').textContent=t('camErr')}
+};
+$('cx').onclick=()=>$('cam').close();
+$('cam').onclose=stopScan;
 
 async function load(){
   P=store.get('cache',[]);ui();
