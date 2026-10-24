@@ -45,6 +45,28 @@ dialog::backdrop{background:#2A223088}
 .fg label{display:grid;gap:4px;font-size:13px;font-weight:600}
 .fg .w{grid-column:1/-1}
 #st{position:fixed;bottom:16px;inset-inline:16px;max-width:420px;margin:auto;background:var(--plum);color:#fff;padding:12px 16px;border-radius:10px;display:none;text-align:center}
+input[type=checkbox]{width:18px;height:18px;padding:0;cursor:pointer}
+.tb select{flex:1;min-width:140px;width:auto}
+.sel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+.sel b{flex:1;min-width:120px}
+#pv{display:none}
+.pvh{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #3E1F47;padding-bottom:6px;margin-bottom:10px;font-size:13px}
+.pvh b{font-size:17px;color:#3E1F47}
+.pvg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pc{border:1px solid #ccc;border-radius:6px;padding:8px;break-inside:avoid;page-break-inside:avoid;text-align:center;display:flex;flex-direction:column;gap:4px}
+.pi{height:34mm;display:grid;place-items:center;color:#ccc;font-size:30px}
+.pi img{max-width:100%;max-height:34mm;object-fit:contain}
+.pb{font-size:11px;color:#8a6420;font-weight:700}
+.pn1{font-size:13px;font-weight:700;line-height:1.4}
+.pn2{font-size:11px;color:#444;line-height:1.3}
+.pbc{width:100%;height:auto;margin-top:auto;direction:ltr}
+@media print{
+  @page{size:A4;margin:10mm}
+  body>*:not(#pv){display:none!important}
+  body{background:#fff}
+  #pv{display:block}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 @media(max-width:520px){.fg{grid-template-columns:1fr}}
 </style>
 </head>
@@ -66,8 +88,23 @@ dialog::backdrop{background:#2A223088}
     <button class="btn o" id="out">خروج</button>
     <input type="file" id="f" accept=".xlsx,.xls,.csv" hidden>
   </div>
+  <div class="tb">
+    <select id="fb" aria-label="الماركة"><option value="">كل الماركات</option></select>
+    <select id="fc" aria-label="التصنيف"><option value="">كل التصنيفات</option></select>
+    <select id="fs" aria-label="الحالة"><option value="">الحالة: الكل</option><option value="on">ظاهر</option><option value="off">مخفي</option></select>
+    <select id="fi" aria-label="الصورة"><option value="">الصورة: الكل</option><option value="yes">بصورة</option><option value="no">بدون صورة</option></select>
+    <select id="fx" aria-label="الباركود"><option value="">الباركود: الكل</option><option value="yes">بباركود</option><option value="no">بدون باركود</option></select>
+    <select id="fk" aria-label="اكتمال البيانات"><option value="">البيانات: الكل</option><option value="yes">مكتملة</option><option value="no">ناقصة</option></select>
+    <button class="btn o s" id="fr">إعادة ضبط</button>
+  </div>
+  <div class="tb sel">
+    <b id="sc"></b>
+    <button class="btn o s" id="sa"></button>
+    <button class="btn o s" id="sn">إلغاء التحديد</button>
+    <button class="btn g" id="pdf">📄 تصدير PDF</button>
+  </div>
   <div class="wrap"><table>
-    <thead><tr><th>صورة</th><th>الباركود</th><th>المنتج</th><th>الماركة</th><th>التصنيف</th><th></th></tr></thead>
+    <thead><tr><th><input type="checkbox" id="ca" aria-label="تحديد الصفحة"></th><th>صورة</th><th>الباركود</th><th>المنتج</th><th>الماركة</th><th>التصنيف</th><th></th></tr></thead>
     <tbody id="tb"></tbody>
   </table></div>
   <div class="pg"><button class="btn o s" id="pp">السابق</button><span id="pi"></span><button class="btn o s" id="pn">التالي</button>
@@ -97,15 +134,16 @@ dialog::backdrop{background:#2A223088}
 </form></dialog>
 <dialog id="cam"><div class="dh"><b>مسح باركود</b><button id="cclose" type="button" aria-label="إغلاق">×</button></div><div id="rd"></div><p id="rm"></p></dialog>
 <div id="st" role="status"></div>
+<div id="pv"></div>
 
 <script>
 const API='https://script.google.com/macros/s/AKfycbw9eTcGMp7MyLTrRdzr_86tLuNCPBZQ5DHCVZQLyjday8cCdncijRUWz5R9wQf00fl7/exec';
 const COLS=['id','barcode','brand_ar','brand_en','category_ar','category_en','name_ar','name_en','description_ar','description_en','image','active'];
 const $=id=>document.getElementById(id);
-const XL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',QR='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js',libs={};
+const XL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',QR='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js',JB='https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js',libs={};
 const lib=(u,g)=>window[g]?Promise.resolve():(libs[u]=libs[u]||new Promise((ok,no)=>{const e=document.createElement('script');e.src=u;e.onload=ok;e.onerror=()=>{delete libs[u];no(new Error('load'))};document.head.appendChild(e)}));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let page=1,size=20,P=[],pw=sessionStorage.getItem('pw')||'',editId='';
+let sel=new Set(),cur=[],page=1,size=20,P=[],pw=sessionStorage.getItem('pw')||'',editId='';
 
 function toast(m,ms=2500){const s=$('st');s.textContent=m;s.style.display='block';clearTimeout(toast.t);if(ms)toast.t=setTimeout(()=>s.style.display='none',ms)}
 async function post(body){
@@ -114,16 +152,35 @@ async function post(body){
 }
 async function load(){
   const d=await (await fetch(API)).json();
-  P=(d.products||[]).filter(p=>p.id).map(p=>({...p,id:String(p.id),barcode:String(p.barcode||'')}));render();
+  P=(d.products||[]).filter(p=>p.id).map(p=>({...p,id:String(p.id),barcode:String(p.barcode||'')}));fillF();render();
 }
 const bi=(a,e)=>(a||e)?`${esc(a)||'<span class="miss">—</span>'}<small dir="ltr">${esc(e)||'<span class="miss">—</span>'}</small>`:'<span class="miss">—</span>';
+const key=(p,k)=>p[k+'_ar']||p[k+'_en']||'';
+const isOn=p=>String(p.active).toLowerCase()!=='false';
+const incomplete=p=>!(p.brand_ar&&p.brand_en&&p.category_ar&&p.category_en&&p.name_ar&&p.name_en&&p.barcode);
+function filtered(){
+  const q=$('s').value.trim().toLowerCase(),b=$('fb').value,c=$('fc').value,st=$('fs').value,im=$('fi').value,bc=$('fx').value,cp=$('fk').value;
+  return P.filter(p=>(!q||COLS.map(k=>p[k]).join(' ').toLowerCase().includes(q))&&(!b||key(p,'brand')===b)&&(!c||key(p,'category')===c)&&(!st||(st==='on')===isOn(p))&&(!im||(im==='yes')===!!p.image)&&(!bc||(bc==='yes')===!!p.barcode)&&(!cp||(cp==='no')===incomplete(p)));
+}
+function fillF(){
+  [['fb','brand','كل الماركات'],['fc','category','كل التصنيفات']].forEach(([id,k,all])=>{
+    const v0=$(id).value,m=new Map();
+    P.forEach(p=>{const v=key(p,k);if(v&&!m.has(v))m.set(v,p[k+'_ar']&&p[k+'_en']?`${p[k+'_ar']} / ${p[k+'_en']}`:v)});
+    $(id).innerHTML=`<option value="">${all}</option>`+[...m].sort((a,b)=>a[1].localeCompare(b[1],'ar')).map(([v,l])=>`<option value="${esc(v)}"${v===v0?' selected':''}>${esc(l)}</option>`).join('');
+  });
+}
+function updSel(){
+  $('sc').textContent=sel.size?`${sel.size} صنف محدد`:'لم تحدد أصنافاً بعد';
+  $('ca').checked=cur.length>0&&cur.every(p=>sel.has(p.id));
+}
 function render(){
-  const q=$('s').value.trim().toLowerCase();
-  const l=P.filter(p=>!q||COLS.map(c=>p[c]).join(' ').toLowerCase().includes(q));
+  const l=filtered();
   const pages=Math.max(1,Math.ceil(l.length/size));if(page>pages)page=pages;
-  $('tb').innerHTML=l.slice((page-1)*size,page*size).map(p=>`<tr class="${String(p.active).toLowerCase()==='false'?'off':''}"><td>${p.image?`<img src="${esc(p.image)}" alt="">`:''}</td><td class="nw">${esc(p.barcode)}</td><td>${bi(p.name_ar,p.name_en)}</td><td>${bi(p.brand_ar,p.brand_en)}</td><td>${bi(p.category_ar,p.category_en)}</td>
-  <td class="nw"><div class="acts"><button class="btn o s" data-e="${esc(p.id)}">تعديل</button><button class="btn r s" data-d="${esc(p.id)}">حذف</button></div></td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;padding:30px">لا توجد منتجات. أضف منتجاً أو استورد ملف Excel.</td></tr>';
+  const pg=cur=l.slice((page-1)*size,page*size);
+  $('tb').innerHTML=pg.map(p=>`<tr class="${String(p.active).toLowerCase()==='false'?'off':''}"><td><input type="checkbox" class="rc" data-s="${esc(p.id)}"${sel.has(p.id)?' checked':''}></td><td>${p.image?`<img src="${esc(p.image)}" alt="">`:''}</td><td class="nw">${esc(p.barcode)}</td><td>${bi(p.name_ar,p.name_en)}</td><td>${bi(p.brand_ar,p.brand_en)}</td><td>${bi(p.category_ar,p.category_en)}</td>
+  <td class="nw"><div class="acts"><button class="btn o s" data-e="${esc(p.id)}">تعديل</button><button class="btn r s" data-d="${esc(p.id)}">حذف</button></div></td></tr>`).join('')||'<tr><td colspan="7" style="text-align:center;padding:30px">لا توجد منتجات. أضف منتجاً أو استورد ملف Excel.</td></tr>';
   $('cnt').textContent=`${l.length} من ${P.length} منتج`;$('pi').textContent=`صفحة ${page} من ${pages}`;$('pp').disabled=page<=1;$('pn').disabled=page>=pages;
+  $('sa').textContent=`تحديد كل النتائج (${l.length})`;updSel();
 }
 function enter(){$('login').style.display='none';$('app').style.display='block';load().catch(()=>toast('تعذر تحميل المنتجات',0))}
 
@@ -133,6 +190,42 @@ $('login').onsubmit=async e=>{
 };
 $('out').onclick=()=>{sessionStorage.removeItem('pw');location.reload()};
 let dt;$('s').oninput=()=>{clearTimeout(dt);dt=setTimeout(()=>{page=1;render()},180)};
+
+['fb','fc','fs','fi','fx','fk'].forEach(i=>$(i).onchange=()=>{page=1;render()});
+$('fr').onclick=()=>{['fb','fc','fs','fi','fx','fk','s'].forEach(i=>$(i).value='');page=1;render()};
+$('tb').onchange=e=>{const id=e.target.dataset.s;if(!id)return;e.target.checked?sel.add(id):sel.delete(id);updSel()};
+$('ca').onchange=e=>{cur.forEach(p=>e.target.checked?sel.add(p.id):sel.delete(p.id));render()};
+$('sa').onclick=()=>{filtered().forEach(p=>sel.add(p.id));render()};
+$('sn').onclick=()=>{sel.clear();render()};
+
+// ===== تصدير PDF: بطاقات الأصناف عبر نافذة الطباعة (حفظ كـ PDF) =====
+function bar(s,c,w,h){
+  const f=/^\d{13}$/.test(c)?'EAN13':/^\d{12}$/.test(c)?'UPC':/^\d{8}$/.test(c)?'EAN8':'CODE128';
+  const o={height:h,width:w,fontSize:14,margin:10,background:'#fff',lineColor:'#000',textMargin:2};
+  try{JsBarcode(s,c,{...o,format:f})}catch(e){try{JsBarcode(s,c,{...o,format:'CODE128'})}catch(e2){s.setAttribute('viewBox','0 0 220 34');s.innerHTML='<text x="110" y="23" text-anchor="middle" font-size="16">'+esc(c)+'</text>';return}}
+  if(!s.getAttribute('viewBox'))s.setAttribute('viewBox',`0 0 ${parseFloat(s.getAttribute('width'))} ${parseFloat(s.getAttribute('height'))}`);
+}
+$('pdf').onclick=async()=>{
+  let items=sel.size?P.filter(p=>sel.has(p.id)):filtered();
+  if(!items.length)return toast('لا توجد أصناف للتصدير');
+  if(!sel.size&&!confirm(`لم تحدد أصنافاً. تصدير كل النتائج الحالية (${items.length} صنف)؟`))return;
+  toast('جاري تجهيز الملف...',0);
+  try{await lib(JB,'JsBarcode')}catch(e){return toast('تعذر تحميل أداة الباركود. تحقق من الاتصال وأعد المحاولة.',4000)}
+  items=[...items].sort((a,b)=>key(a,'brand').localeCompare(key(b,'brand'),'ar')||(a.name_ar||a.name_en||'').localeCompare(b.name_ar||b.name_en||'','ar'));
+  const brands=[...new Set(items.map(p=>key(p,'brand')).filter(Boolean))];
+  const title=brands.length===1?`كتالوج ${brands[0]}`:'كتالوج المنتجات';
+  $('pv').innerHTML=`<div class="pvh"><b>${esc(title)}</b><span>${items.length} صنف · ${new Date().toLocaleDateString('en-GB')}</span></div><div class="pvg">`+items.map(p=>`<div class="pc"><div class="pi">${p.image?`<img src="${esc(p.image)}" alt="" onerror="this.style.visibility='hidden'">`:'✦'}</div>
+    <div class="pb">${esc(p.brand_ar)}${p.brand_en?` / <span dir="ltr">${esc(p.brand_en)}</span>`:''}</div>
+    <div class="pn1">${esc(p.name_ar)}</div><div class="pn2" dir="ltr">${esc(p.name_en)}</div>
+    ${p.barcode?`<svg class="pbc" data-c="${esc(p.barcode)}"></svg>`:''}</div>`).join('')+'</div>';
+  $('pv').querySelectorAll('svg.pbc').forEach(x=>bar(x,x.dataset.c,2,48));
+  const imgs=[...$('pv').querySelectorAll('img')];
+  await Promise.race([Promise.all(imgs.map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r}))),new Promise(r=>setTimeout(r,10000))]);
+  const t0=document.title;document.title='catalog-'+new Date().toISOString().slice(0,10);
+  addEventListener('afterprint',()=>{document.title=t0;$('pv').innerHTML=''},{once:true});
+  $('st').style.display='none';
+  print();
+};
 
 const go=n=>{page=n;render();window.scrollTo({top:0})};
 $('pp').onclick=()=>go(page-1);$('pn').onclick=()=>go(page+1);
