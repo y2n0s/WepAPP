@@ -1,302 +1,755 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">
-<meta name="author" content="يونس البحر / Younes AL-Bahar">
-<title>لوحة إدارة المنتجات</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-:root{--plum:#3E1F47;--blush:#F7ECEF;--gold:#B7862F;--ink:#2A2230;--line:#E6D9DE}
-*{box-sizing:border-box}
-body{margin:0;font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--ink);background:var(--blush)}
-button,input,select,textarea{font:inherit}
-.btn{background:var(--plum);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer;font-weight:600}
-.btn.g{background:var(--gold)}.btn.o{background:#fff;color:var(--plum);border:1px solid var(--plum)}.btn.r{background:#a33}
-input,select,textarea{padding:9px 11px;border:1px solid var(--line);border-radius:8px;width:100%;background:#fff}
-:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-#login{max-width:340px;margin:18vh auto;background:#fff;padding:26px;border-radius:14px;display:grid;gap:12px;border:1px solid var(--line)}
-#login h1{margin:0;font-size:19px}
-#app{display:none;padding:16px;max-width:1100px;margin:auto}
-.tb{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
-.tb input{flex:1;min-width:180px;width:auto}
-.wrap{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:auto}
-table{width:100%;border-collapse:collapse;font-size:14px}
-th,td{padding:9px 12px;text-align:start;border-bottom:1px solid var(--line);vertical-align:middle}
-td.nw{white-space:nowrap}
-td small{display:block;color:#6b5b70}
-.miss{color:#a33}
-.btn.s{padding:6px 12px;font-size:13px}
-.acts{display:flex;gap:6px}
-.pg{display:flex;gap:10px;align-items:center;justify-content:center;margin:14px 0;flex-wrap:wrap}
-.pg select{width:auto}.pg .btn:disabled{opacity:.4;cursor:default}
-.dh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--plum);color:#fff}
-.dh button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer}
-#cam{padding:0;overflow:hidden}
-#rd{width:100%;min-height:240px;background:#000}
-#rm{padding:12px;margin:0;text-align:center;font-size:14px}
-th{background:#faf3f5;position:sticky;top:0}
-td img{width:38px;height:38px;object-fit:contain}
-.off{opacity:.5}
-dialog{border:0;border-radius:14px;width:min(600px,94vw);padding:20px}
-dialog::backdrop{background:#2A223088}
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fg label{display:grid;gap:4px;font-size:13px;font-weight:600}
-.fg .w{grid-column:1/-1}
-#st{position:fixed;bottom:16px;inset-inline:16px;max-width:420px;margin:auto;background:var(--plum);color:#fff;padding:12px 16px;border-radius:10px;display:none;text-align:center}
-input[type=checkbox]{width:18px;height:18px;padding:0;cursor:pointer}
-.tb select{flex:1;min-width:140px;width:auto}
-.sel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px}
-.sel b{flex:1;min-width:120px}
-#pv{display:none}
-.pvh{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #3E1F47;padding-bottom:6px;margin-bottom:10px;font-size:13px}
-.pvh b{font-size:17px;color:#3E1F47}
-.pvg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.pc{border:1px solid #ccc;border-radius:6px;padding:8px;break-inside:avoid;page-break-inside:avoid;text-align:center;display:flex;flex-direction:column;gap:4px}
-.pi{height:34mm;display:grid;place-items:center;color:#ccc;font-size:30px}
-.pi img{max-width:100%;max-height:34mm;object-fit:contain}
-.pb{font-size:11px;color:#8a6420;font-weight:700}
-.pn1{font-size:13px;font-weight:700;line-height:1.4}
-.pn2{font-size:11px;color:#444;line-height:1.3}
-.pbc{width:100%;height:auto;margin-top:auto;direction:ltr}
-@media print{
-  @page{size:A4;margin:10mm}
-  body>*:not(#pv){display:none!important}
-  body{background:#fff}
-  #pv{display:block}
-  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
-}
-@media(max-width:520px){.fg{grid-template-columns:1fr}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="author" content="يونس البحر / Younes AL-Bahar">
+  <title>لوحة إدارة المنتجات</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --plum: #3E1F47;
+      --blush: #F7ECEF;
+      --gold: #B7862F;
+      --ink: #2A2230;
+      --line: #E6D9DE
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--blush)
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    .btn {
+      background: var(--plum);
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      padding: 9px 16px;
+      cursor: pointer;
+      font-weight: 600
+    }
+
+    .btn.g {
+      background: var(--gold)
+    }
+
+    .btn.o {
+      background: #fff;
+      color: var(--plum);
+      border: 1px solid var(--plum)
+    }
+
+    .btn.r {
+      background: #a33
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      width: 100%;
+      background: #fff
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px
+    }
+
+    #login {
+      max-width: 340px;
+      margin: 18vh auto;
+      background: #fff;
+      padding: 26px;
+      border-radius: 14px;
+      display: grid;
+      gap: 12px;
+      border: 1px solid var(--line)
+    }
+
+    #login h1 {
+      margin: 0;
+      font-size: 19px
+    }
+
+    #app {
+      display: none;
+      padding: 16px;
+      max-width: 1100px;
+      margin: auto
+    }
+
+    .tb {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 14px
+    }
+
+    .tb input {
+      flex: 1;
+      min-width: 180px;
+      width: auto
+    }
+
+    .wrap {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: auto
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px
+    }
+
+    th,
+    td {
+      padding: 9px 12px;
+      text-align: start;
+      border-bottom: 1px solid var(--line);
+      vertical-align: middle
+    }
+
+    td.nw {
+      white-space: nowrap
+    }
+
+    td small {
+      display: block;
+      color: #6b5b70
+    }
+
+    .miss {
+      color: #a33
+    }
+
+    .btn.s {
+      padding: 6px 12px;
+      font-size: 13px
+    }
+
+    .acts {
+      display: flex;
+      gap: 6px
+    }
+
+    .pg {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      margin: 14px 0;
+      flex-wrap: wrap
+    }
+
+    .pg select {
+      width: auto
+    }
+
+    .pg .btn:disabled {
+      opacity: .4;
+      cursor: default
+    }
+
+    .dh {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      background: var(--plum);
+      color: #fff
+    }
+
+    .dh button {
+      background: none;
+      border: 0;
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer
+    }
+
+    #cam {
+      padding: 0;
+      overflow: hidden
+    }
+
+    #rd {
+      width: 100%;
+      min-height: 240px;
+      background: #000
+    }
+
+    #rm {
+      padding: 12px;
+      margin: 0;
+      text-align: center;
+      font-size: 14px
+    }
+
+    th {
+      background: #faf3f5;
+      position: sticky;
+      top: 0
+    }
+
+    td img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain
+    }
+
+    .off {
+      opacity: .5
+    }
+
+    dialog {
+      border: 0;
+      border-radius: 14px;
+      width: min(600px, 94vw);
+      padding: 20px
+    }
+
+    dialog::backdrop {
+      background: #2A223088
+    }
+
+    .fg {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .fg label {
+      display: grid;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 600
+    }
+
+    .fg .w {
+      grid-column: 1/-1
+    }
+
+    #st {
+      position: fixed;
+      bottom: 16px;
+      inset-inline: 16px;
+      max-width: 420px;
+      margin: auto;
+      background: var(--plum);
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 10px;
+      display: none;
+      text-align: center
+    }
+
+    input[type=checkbox] {
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      cursor: pointer
+    }
+
+    .tb select {
+      flex: 1;
+      min-width: 140px;
+      width: auto
+    }
+
+    .sel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 12px
+    }
+
+    .sel b {
+      flex: 1;
+      min-width: 120px
+    }
+
+    #pv {
+      display: none
+    }
+
+    .pvh {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 2px solid #3E1F47;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+      font-size: 13px
+    }
+
+    .pvh b {
+      font-size: 17px;
+      color: #3E1F47
+    }
+
+    .pvg {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px
+    }
+
+    .pc {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 8px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .pi {
+      height: 34mm;
+      display: grid;
+      place-items: center;
+      color: #ccc;
+      font-size: 30px
+    }
+
+    .pi img {
+      max-width: 100%;
+      max-height: 34mm;
+      object-fit: contain
+    }
+
+    .pb {
+      font-size: 11px;
+      color: #8a6420;
+      font-weight: 700
+    }
+
+    .pn1 {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.4
+    }
+
+    .pn2 {
+      font-size: 11px;
+      color: #444;
+      line-height: 1.3
+    }
+
+    .pbc {
+      width: 100%;
+      height: auto;
+      margin-top: auto;
+      direction: ltr
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 10mm
+      }
+
+      body>*:not(#pv) {
+        display: none !important
+      }
+
+      body {
+        background: #fff
+      }
+
+      #pv {
+        display: block
+      }
+
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact
+      }
+    }
+
+    @media(max-width:520px) {
+      .fg {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
 </head>
+
 <body>
-<form id="login">
-  <h1>إدارة المنتجات</h1>
-  <input id="pw" type="password" placeholder="كلمة المرور" autocomplete="current-password" required>
-  <button class="btn" type="submit">دخول</button>
-  <small id="le" style="color:#a33"></small>
-</form>
+  <form id="login">
+    <h1>إدارة المنتجات</h1>
+    <input id="pw" type="password" placeholder="كلمة المرور" autocomplete="current-password" required>
+    <button class="btn" type="submit">دخول</button>
+    <small id="le" style="color:#a33"></small>
+  </form>
 
-<div id="app">
-  <div class="tb">
-    <input id="s" type="search" placeholder="ابحث بالاسم أو الباركود أو الماركة">
-    <button class="btn g" id="add">+ منتج جديد</button>
-    <button class="btn o" id="tscan" hidden>📷 مسح باركود</button>
-    <button class="btn o" id="imp">استيراد Excel</button>
-    <button class="btn o" id="exp">تصدير Excel</button>
-    <button class="btn o" id="out">خروج</button>
-    <input type="file" id="f" accept=".xlsx,.xls,.csv" hidden>
+  <div id="app">
+    <div class="tb">
+      <input id="s" type="search" placeholder="ابحث بالاسم أو الباركود أو الماركة">
+      <button class="btn g" id="add">+ منتج جديد</button>
+      <button class="btn o" id="tscan" hidden>📷 مسح باركود</button>
+      <button class="btn o" id="imp">استيراد Excel</button>
+      <button class="btn o" id="exp">تصدير Excel</button>
+      <button class="btn o" id="b64">تحويل الصور إلى Base64</button>
+      <button class="btn o" id="out">خروج</button>
+      <input type="file" id="f" accept=".xlsx,.xls,.csv" hidden>
+    </div>
+    <div class="tb">
+      <select id="fb" aria-label="الماركة">
+        <option value="">كل الماركات</option>
+      </select>
+      <select id="fc" aria-label="التصنيف">
+        <option value="">كل التصنيفات</option>
+      </select>
+      <select id="fs" aria-label="الحالة">
+        <option value="">الحالة: الكل</option>
+        <option value="on">ظاهر</option>
+        <option value="off">مخفي</option>
+      </select>
+      <select id="fi" aria-label="الصورة">
+        <option value="">الصورة: الكل</option>
+        <option value="yes">بصورة</option>
+        <option value="no">بدون صورة</option>
+        <option value="url">رابط خارجي (غير محوّلة)</option>
+      </select>
+      <select id="fx" aria-label="الباركود">
+        <option value="">الباركود: الكل</option>
+        <option value="yes">بباركود</option>
+        <option value="no">بدون باركود</option>
+      </select>
+      <select id="fk" aria-label="اكتمال البيانات">
+        <option value="">البيانات: الكل</option>
+        <option value="yes">مكتملة</option>
+        <option value="no">ناقصة</option>
+      </select>
+      <button class="btn o s" id="fr">إعادة ضبط</button>
+    </div>
+    <div class="tb sel">
+      <b id="sc"></b>
+      <button class="btn o s" id="sa"></button>
+      <button class="btn o s" id="sn">إلغاء التحديد</button>
+      <button class="btn g" id="pdf">📄 تصدير PDF</button>
+    </div>
+    <div class="wrap">
+      <table>
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="ca" aria-label="تحديد الصفحة"></th>
+            <th>صورة</th>
+            <th>الباركود</th>
+            <th>المنتج</th>
+            <th>الماركة</th>
+            <th>التصنيف</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+    <div class="pg"><button class="btn o s" id="pp">السابق</button><span id="pi"></span><button class="btn o s"
+        id="pn">التالي</button>
+      <select id="ps" aria-label="عدد المنتجات في الصفحة">
+        <option value="20">20 في الصفحة</option>
+        <option value="50">50 في الصفحة</option>
+        <option value="100">100 في الصفحة</option>
+      </select>
+    </div>
+    <p id="cnt" style="color:#6b5b70;text-align:center"></p>
+    <p style="text-align:center;font-size:13px;color:#6b5b70">تصميم وبرمجة: <b style="color:var(--plum)">يونس البحر</b>
+      · Design &amp; development: <b style="color:var(--plum)">Younes AL-Bahar</b></p>
   </div>
-  <div class="tb">
-    <select id="fb" aria-label="الماركة"><option value="">كل الماركات</option></select>
-    <select id="fc" aria-label="التصنيف"><option value="">كل التصنيفات</option></select>
-    <select id="fs" aria-label="الحالة"><option value="">الحالة: الكل</option><option value="on">ظاهر</option><option value="off">مخفي</option></select>
-    <select id="fi" aria-label="الصورة"><option value="">الصورة: الكل</option><option value="yes">بصورة</option><option value="no">بدون صورة</option></select>
-    <select id="fx" aria-label="الباركود"><option value="">الباركود: الكل</option><option value="yes">بباركود</option><option value="no">بدون باركود</option></select>
-    <select id="fk" aria-label="اكتمال البيانات"><option value="">البيانات: الكل</option><option value="yes">مكتملة</option><option value="no">ناقصة</option></select>
-    <button class="btn o s" id="fr">إعادة ضبط</button>
-  </div>
-  <div class="tb sel">
-    <b id="sc"></b>
-    <button class="btn o s" id="sa"></button>
-    <button class="btn o s" id="sn">إلغاء التحديد</button>
-    <button class="btn g" id="pdf">📄 تصدير PDF</button>
-  </div>
-  <div class="wrap"><table>
-    <thead><tr><th><input type="checkbox" id="ca" aria-label="تحديد الصفحة"></th><th>صورة</th><th>الباركود</th><th>المنتج</th><th>الماركة</th><th>التصنيف</th><th></th></tr></thead>
-    <tbody id="tb"></tbody>
-  </table></div>
-  <div class="pg"><button class="btn o s" id="pp">السابق</button><span id="pi"></span><button class="btn o s" id="pn">التالي</button>
-    <select id="ps" aria-label="عدد المنتجات في الصفحة"><option value="20">20 في الصفحة</option><option value="50">50 في الصفحة</option><option value="100">100 في الصفحة</option></select></div>
-  <p id="cnt" style="color:#6b5b70;text-align:center"></p>
-  <p style="text-align:center;font-size:13px;color:#6b5b70">تصميم وبرمجة: <b style="color:var(--plum)">يونس البحر</b> · Design &amp; development: <b style="color:var(--plum)">Younes AL-Bahar</b></p>
-</div>
 
-<dialog id="dlg"><form method="dialog" id="fm">
-  <div class="fg">
-    <label>الباركود<span style="display:flex;gap:6px"><input name="barcode" inputmode="numeric"><button type="button" class="btn s" id="fscan" hidden aria-label="مسح بالكاميرا">📷</button></span></label>
-    <label>الماركة بالعربية<input name="brand_ar" required></label>
-    <label>Brand in English<input name="brand_en" dir="ltr" required></label>
-    <label>التصنيف بالعربية<input name="category_ar" required></label>
-    <label>Category in English<input name="category_en" dir="ltr" required></label>
-    <label class="w">الحالة<select name="active"><option value="TRUE">ظاهر</option><option value="FALSE">مخفي</option></select></label>
-    <label>الاسم بالعربية<input name="name_ar" required></label>
-    <label>Name in English<input name="name_en" dir="ltr"></label>
-    <label class="w">رابط الصورة<input name="image" dir="ltr" placeholder="https://..."></label>
-    <label>الوصف بالعربية<textarea name="description_ar" rows="2"></textarea></label>
-    <label>Description in English<textarea name="description_en" rows="2" dir="ltr"></textarea></label>
-  </div>
-  <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
-    <button class="btn o" type="button" id="cx">إلغاء</button>
-    <button class="btn" type="submit">حفظ</button>
-  </div>
-</form></dialog>
-<dialog id="cam"><div class="dh"><b>مسح باركود</b><button id="cclose" type="button" aria-label="إغلاق">×</button></div><div id="rd"></div><p id="rm"></p></dialog>
-<div id="st" role="status"></div>
-<div id="pv"></div>
+  <dialog id="dlg">
+    <form method="dialog" id="fm">
+      <div class="fg">
+        <label>الباركود<span style="display:flex;gap:6px"><input name="barcode" inputmode="numeric"><button
+              type="button" class="btn s" id="fscan" hidden aria-label="مسح بالكاميرا">📷</button></span></label>
+        <label>الماركة بالعربية<input name="brand_ar" required></label>
+        <label>Brand in English<input name="brand_en" dir="ltr" required></label>
+        <label>التصنيف بالعربية<input name="category_ar" required></label>
+        <label>Category in English<input name="category_en" dir="ltr" required></label>
+        <label class="w">الحالة<select name="active">
+            <option value="TRUE">ظاهر</option>
+            <option value="FALSE">مخفي</option>
+          </select></label>
+        <label>الاسم بالعربية<input name="name_ar" required></label>
+        <label>Name in English<input name="name_en" dir="ltr"></label>
+        <label class="w">رابط الصورة (يُحفظ كـ Base64)<input name="image" dir="ltr"
+            placeholder="الصق رابط الصورة https://..."></label>
+        <div class="w" id="ipw" style="display:none;align-items:center;gap:10px"><img id="ip" alt=""
+            style="width:64px;height:64px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff"><span
+            style="flex:1;font-size:13px;color:#6b5b70">الصورة الحالية محفوظة. الصق رابطاً جديداً
+            لاستبدالها.</span><button type="button" class="btn r s" id="ic">حذف الصورة</button></div>
+        <label>الوصف بالعربية<textarea name="description_ar" rows="2"></textarea></label>
+        <label>Description in English<textarea name="description_en" rows="2" dir="ltr"></textarea></label>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
+        <button class="btn o" type="button" id="cx">إلغاء</button>
+        <button class="btn" type="submit">حفظ</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="cam">
+    <div class="dh"><b>مسح باركود</b><button id="cclose" type="button" aria-label="إغلاق">×</button></div>
+    <div id="rd"></div>
+    <p id="rm"></p>
+  </dialog>
+  <div id="st" role="status"></div>
+  <div id="pv"></div>
 
-<script>
-const API='https://script.google.com/macros/s/AKfycbw9eTcGMp7MyLTrRdzr_86tLuNCPBZQ5DHCVZQLyjday8cCdncijRUWz5R9wQf00fl7/exec';
-const COLS=['id','barcode','brand_ar','brand_en','category_ar','category_en','name_ar','name_en','description_ar','description_en','image','active'];
-const $=id=>document.getElementById(id);
-const XL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',QR='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js',JB='https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js',libs={};
-const lib=(u,g)=>window[g]?Promise.resolve():(libs[u]=libs[u]||new Promise((ok,no)=>{const e=document.createElement('script');e.src=u;e.onload=ok;e.onerror=()=>{delete libs[u];no(new Error('load'))};document.head.appendChild(e)}));
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let sel=new Set(),cur=[],page=1,size=20,P=[],pw=sessionStorage.getItem('pw')||'',editId='';
+  <script>
+    const API = 'https://script.google.com/macros/s/AKfycbyTgrYTvM2YC2qyZXSDSs-2mYktb-d60sbbfpmJhOvF5IVXe-ORbSadGwvSku96nT4/exec';
+    const COLS = ['id', 'barcode', 'brand_ar', 'brand_en', 'category_ar', 'category_en', 'name_ar', 'name_en', 'description_ar', 'description_en', 'image', 'active'];
+    const $ = id => document.getElementById(id);
+    const XL = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', QR = 'https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js', JB = 'https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js', libs = {};
+    const lib = (u, g) => window[g] ? Promise.resolve() : (libs[u] = libs[u] || new Promise((ok, no) => { const e = document.createElement('script'); e.src = u; e.onload = ok; e.onerror = () => { delete libs[u]; no(new Error('load')) }; document.head.appendChild(e) }));
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    let sel = new Set(), cur = [], page = 1, size = 20, P = [], pw = sessionStorage.getItem('pw') || '', editId = '', editImg = '', imgClear = false;
 
-function toast(m,ms=2500){const s=$('st');s.textContent=m;s.style.display='block';clearTimeout(toast.t);if(ms)toast.t=setTimeout(()=>s.style.display='none',ms)}
-async function post(body){
-  const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({password:pw,...body})});
-  const d=await r.json();if(!d.ok)throw new Error(d.error||'خطأ');return d;
-}
-async function load(){
-  const d=await (await fetch(API)).json();
-  P=(d.products||[]).filter(p=>p.id).map(p=>({...p,id:String(p.id),barcode:String(p.barcode||'')}));fillF();render();
-}
-const bi=(a,e)=>(a||e)?`${esc(a)||'<span class="miss">—</span>'}<small dir="ltr">${esc(e)||'<span class="miss">—</span>'}</small>`:'<span class="miss">—</span>';
-const key=(p,k)=>p[k+'_ar']||p[k+'_en']||'';
-const isOn=p=>String(p.active).toLowerCase()!=='false';
-const incomplete=p=>!(p.brand_ar&&p.brand_en&&p.category_ar&&p.category_en&&p.name_ar&&p.name_en&&p.barcode);
-function filtered(){
-  const q=$('s').value.trim().toLowerCase(),b=$('fb').value,c=$('fc').value,st=$('fs').value,im=$('fi').value,bc=$('fx').value,cp=$('fk').value;
-  return P.filter(p=>(!q||COLS.map(k=>p[k]).join(' ').toLowerCase().includes(q))&&(!b||key(p,'brand')===b)&&(!c||key(p,'category')===c)&&(!st||(st==='on')===isOn(p))&&(!im||(im==='yes')===!!p.image)&&(!bc||(bc==='yes')===!!p.barcode)&&(!cp||(cp==='no')===incomplete(p)));
-}
-function fillF(){
-  [['fb','brand','كل الماركات'],['fc','category','كل التصنيفات']].forEach(([id,k,all])=>{
-    const v0=$(id).value,m=new Map();
-    P.forEach(p=>{const v=key(p,k);if(v&&!m.has(v))m.set(v,p[k+'_ar']&&p[k+'_en']?`${p[k+'_ar']} / ${p[k+'_en']}`:v)});
-    $(id).innerHTML=`<option value="">${all}</option>`+[...m].sort((a,b)=>a[1].localeCompare(b[1],'ar')).map(([v,l])=>`<option value="${esc(v)}"${v===v0?' selected':''}>${esc(l)}</option>`).join('');
-  });
-}
-function updSel(){
-  $('sc').textContent=sel.size?`${sel.size} صنف محدد`:'لم تحدد أصنافاً بعد';
-  $('ca').checked=cur.length>0&&cur.every(p=>sel.has(p.id));
-}
-function render(){
-  const l=filtered();
-  const pages=Math.max(1,Math.ceil(l.length/size));if(page>pages)page=pages;
-  const pg=cur=l.slice((page-1)*size,page*size);
-  $('tb').innerHTML=pg.map(p=>`<tr class="${String(p.active).toLowerCase()==='false'?'off':''}"><td><input type="checkbox" class="rc" data-s="${esc(p.id)}"${sel.has(p.id)?' checked':''}></td><td>${p.image?`<img src="${esc(p.image)}" alt="">`:''}</td><td class="nw">${esc(p.barcode)}</td><td>${bi(p.name_ar,p.name_en)}</td><td>${bi(p.brand_ar,p.brand_en)}</td><td>${bi(p.category_ar,p.category_en)}</td>
-  <td class="nw"><div class="acts"><button class="btn o s" data-e="${esc(p.id)}">تعديل</button><button class="btn r s" data-d="${esc(p.id)}">حذف</button></div></td></tr>`).join('')||'<tr><td colspan="7" style="text-align:center;padding:30px">لا توجد منتجات. أضف منتجاً أو استورد ملف Excel.</td></tr>';
-  $('cnt').textContent=`${l.length} من ${P.length} منتج`;$('pi').textContent=`صفحة ${page} من ${pages}`;$('pp').disabled=page<=1;$('pn').disabled=page>=pages;
-  $('sa').textContent=`تحديد كل النتائج (${l.length})`;updSel();
-}
-function enter(){$('login').style.display='none';$('app').style.display='block';load().catch(()=>toast('تعذر تحميل المنتجات',0))}
+    function toast(m, ms = 2500) { const s = $('st'); s.textContent = m; s.style.display = 'block'; clearTimeout(toast.t); if (ms) toast.t = setTimeout(() => s.style.display = 'none', ms) }
+    async function post(body) {
+      const r = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ password: pw, ...body }) });
+      const d = await r.json(); if (!d.ok) throw new Error(d.error || 'خطأ'); return d;
+    }
+    async function load() {
+      const d = await (await fetch(API)).json();
+      P = (d.products || []).filter(p => p.id).map(p => ({ ...p, id: String(p.id), barcode: String(p.barcode || '') })); fillF(); render();
+    }
+    const bi = (a, e) => (a || e) ? `${esc(a) || '<span class="miss">—</span>'}<small dir="ltr">${esc(e) || '<span class="miss">—</span>'}</small>` : '<span class="miss">—</span>';
+    const key = (p, k) => p[k + '_ar'] || p[k + '_en'] || '';
+    const isOn = p => String(p.active).toLowerCase() !== 'false';
+    const incomplete = p => !(p.brand_ar && p.brand_en && p.category_ar && p.category_en && p.name_ar && p.name_en && p.barcode);
+    function filtered() {
+      const q = $('s').value.trim().toLowerCase(), b = $('fb').value, c = $('fc').value, st = $('fs').value, im = $('fi').value, bc = $('fx').value, cp = $('fk').value;
+      return P.filter(p => (!q || COLS.map(k => p[k]).join(' ').toLowerCase().includes(q)) && (!b || key(p, 'brand') === b) && (!c || key(p, 'category') === c) && (!st || (st === 'on') === isOn(p)) && (!im || (im === 'url' ? /^https?:/i.test(p.image || '') : (im === 'yes') === !!p.image)) && (!bc || (bc === 'yes') === !!p.barcode) && (!cp || (cp === 'no') === incomplete(p)));
+    }
+    function fillF() {
+      [['fb', 'brand', 'كل الماركات'], ['fc', 'category', 'كل التصنيفات']].forEach(([id, k, all]) => {
+        const v0 = $(id).value, m = new Map();
+        P.forEach(p => { const v = key(p, k); if (v && !m.has(v)) m.set(v, p[k + '_ar'] && p[k + '_en'] ? `${p[k + '_ar']} / ${p[k + '_en']}` : v) });
+        $(id).innerHTML = `<option value="">${all}</option>` + [...m].sort((a, b) => a[1].localeCompare(b[1], 'ar')).map(([v, l]) => `<option value="${esc(v)}"${v === v0 ? ' selected' : ''}>${esc(l)}</option>`).join('');
+      });
+    }
+    function updSel() {
+      $('sc').textContent = sel.size ? `${sel.size} صنف محدد` : 'لم تحدد أصنافاً بعد';
+      $('ca').checked = cur.length > 0 && cur.every(p => sel.has(p.id));
+    }
+    function render() {
+      const l = filtered();
+      const pages = Math.max(1, Math.ceil(l.length / size)); if (page > pages) page = pages;
+      const pg = cur = l.slice((page - 1) * size, page * size);
+      $('tb').innerHTML = pg.map(p => `<tr class="${String(p.active).toLowerCase() === 'false' ? 'off' : ''}"><td><input type="checkbox" class="rc" data-s="${esc(p.id)}"${sel.has(p.id) ? ' checked' : ''}></td><td>${p.image ? `<img src="${esc(p.image)}" alt="">` : ''}</td><td class="nw">${esc(p.barcode)}</td><td>${bi(p.name_ar, p.name_en)}</td><td>${bi(p.brand_ar, p.brand_en)}</td><td>${bi(p.category_ar, p.category_en)}</td>
+  <td class="nw"><div class="acts"><button class="btn o s" data-e="${esc(p.id)}">تعديل</button><button class="btn r s" data-d="${esc(p.id)}">حذف</button></div></td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center;padding:30px">لا توجد منتجات. أضف منتجاً أو استورد ملف Excel.</td></tr>';
+      $('cnt').textContent = `${l.length} من ${P.length} منتج`; $('pi').textContent = `صفحة ${page} من ${pages}`; $('pp').disabled = page <= 1; $('pn').disabled = page >= pages;
+      $('sa').textContent = `تحديد كل النتائج (${l.length})`; updSel();
+    }
+    function enter() { $('login').style.display = 'none'; $('app').style.display = 'block'; load().catch(() => toast('تعذر تحميل المنتجات', 0)) }
 
-$('login').onsubmit=async e=>{
-  e.preventDefault();pw=$('pw').value;$('le').textContent='';
-  try{await post({action:'check'});sessionStorage.setItem('pw',pw);enter()}catch(x){$('le').textContent=x.message}
-};
-$('out').onclick=()=>{sessionStorage.removeItem('pw');location.reload()};
-let dt;$('s').oninput=()=>{clearTimeout(dt);dt=setTimeout(()=>{page=1;render()},180)};
+    $('login').onsubmit = async e => {
+      e.preventDefault(); pw = $('pw').value; $('le').textContent = '';
+      try { await post({ action: 'check' }); sessionStorage.setItem('pw', pw); enter() } catch (x) { $('le').textContent = x.message }
+    };
+    $('out').onclick = () => { sessionStorage.removeItem('pw'); location.reload() };
+    let dt; $('s').oninput = () => { clearTimeout(dt); dt = setTimeout(() => { page = 1; render() }, 180) };
 
-['fb','fc','fs','fi','fx','fk'].forEach(i=>$(i).onchange=()=>{page=1;render()});
-$('fr').onclick=()=>{['fb','fc','fs','fi','fx','fk','s'].forEach(i=>$(i).value='');page=1;render()};
-$('tb').onchange=e=>{const id=e.target.dataset.s;if(!id)return;e.target.checked?sel.add(id):sel.delete(id);updSel()};
-$('ca').onchange=e=>{cur.forEach(p=>e.target.checked?sel.add(p.id):sel.delete(p.id));render()};
-$('sa').onclick=()=>{filtered().forEach(p=>sel.add(p.id));render()};
-$('sn').onclick=()=>{sel.clear();render()};
+    ['fb', 'fc', 'fs', 'fi', 'fx', 'fk'].forEach(i => $(i).onchange = () => { page = 1; render() });
+    $('fr').onclick = () => { ['fb', 'fc', 'fs', 'fi', 'fx', 'fk', 's'].forEach(i => $(i).value = ''); page = 1; render() };
+    $('tb').onchange = e => { const id = e.target.dataset.s; if (!id) return; e.target.checked ? sel.add(id) : sel.delete(id); updSel() };
+    $('ca').onchange = e => { cur.forEach(p => e.target.checked ? sel.add(p.id) : sel.delete(p.id)); render() };
+    $('sa').onclick = () => { filtered().forEach(p => sel.add(p.id)); render() };
+    $('sn').onclick = () => { sel.clear(); render() };
 
-// ===== تصدير PDF: بطاقات الأصناف عبر نافذة الطباعة (حفظ كـ PDF) =====
-function bar(s,c,w,h){
-  const f=/^\d{13}$/.test(c)?'EAN13':/^\d{12}$/.test(c)?'UPC':/^\d{8}$/.test(c)?'EAN8':'CODE128';
-  const o={height:h,width:w,fontSize:14,margin:10,background:'#fff',lineColor:'#000',textMargin:2};
-  try{JsBarcode(s,c,{...o,format:f})}catch(e){try{JsBarcode(s,c,{...o,format:'CODE128'})}catch(e2){s.setAttribute('viewBox','0 0 220 34');s.innerHTML='<text x="110" y="23" text-anchor="middle" font-size="16">'+esc(c)+'</text>';return}}
-  if(!s.getAttribute('viewBox'))s.setAttribute('viewBox',`0 0 ${parseFloat(s.getAttribute('width'))} ${parseFloat(s.getAttribute('height'))}`);
-}
-$('pdf').onclick=async()=>{
-  let items=sel.size?P.filter(p=>sel.has(p.id)):filtered();
-  if(!items.length)return toast('لا توجد أصناف للتصدير');
-  if(!sel.size&&!confirm(`لم تحدد أصنافاً. تصدير كل النتائج الحالية (${items.length} صنف)؟`))return;
-  toast('جاري تجهيز الملف...',0);
-  try{await lib(JB,'JsBarcode')}catch(e){return toast('تعذر تحميل أداة الباركود. تحقق من الاتصال وأعد المحاولة.',4000)}
-  items=[...items].sort((a,b)=>key(a,'brand').localeCompare(key(b,'brand'),'ar')||(a.name_ar||a.name_en||'').localeCompare(b.name_ar||b.name_en||'','ar'));
-  const brands=[...new Set(items.map(p=>key(p,'brand')).filter(Boolean))];
-  const title=brands.length===1?`كتالوج ${brands[0]}`:'كتالوج المنتجات';
-  $('pv').innerHTML=`<div class="pvh"><b>${esc(title)}</b><span>${items.length} صنف · ${new Date().toLocaleDateString('en-GB')}</span></div><div class="pvg">`+items.map(p=>`<div class="pc"><div class="pi">${p.image?`<img src="${esc(p.image)}" alt="" onerror="this.style.visibility='hidden'">`:'✦'}</div>
-    <div class="pb">${esc(p.brand_ar)}${p.brand_en?` / <span dir="ltr">${esc(p.brand_en)}</span>`:''}</div>
+    // ===== تصدير PDF: بطاقات الأصناف عبر نافذة الطباعة (حفظ كـ PDF) =====
+    function bar(s, c, w, h) {
+      const f = /^\d{13}$/.test(c) ? 'EAN13' : /^\d{12}$/.test(c) ? 'UPC' : /^\d{8}$/.test(c) ? 'EAN8' : 'CODE128';
+      const o = { height: h, width: w, fontSize: 14, margin: 10, background: '#fff', lineColor: '#000', textMargin: 2 };
+      try { JsBarcode(s, c, { ...o, format: f }) } catch (e) { try { JsBarcode(s, c, { ...o, format: 'CODE128' }) } catch (e2) { s.setAttribute('viewBox', '0 0 220 34'); s.innerHTML = '<text x="110" y="23" text-anchor="middle" font-size="16">' + esc(c) + '</text>'; return } }
+      if (!s.getAttribute('viewBox')) s.setAttribute('viewBox', `0 0 ${parseFloat(s.getAttribute('width'))} ${parseFloat(s.getAttribute('height'))}`);
+    }
+    $('pdf').onclick = async () => {
+      let items = sel.size ? P.filter(p => sel.has(p.id)) : filtered();
+      if (!items.length) return toast('لا توجد أصناف للتصدير');
+      if (!sel.size && !confirm(`لم تحدد أصنافاً. تصدير كل النتائج الحالية (${items.length} صنف)؟`)) return;
+      toast('جاري تجهيز الملف...', 0);
+      try { await lib(JB, 'JsBarcode') } catch (e) { return toast('تعذر تحميل أداة الباركود. تحقق من الاتصال وأعد المحاولة.', 4000) }
+      items = [...items].sort((a, b) => key(a, 'brand').localeCompare(key(b, 'brand'), 'ar') || (a.name_ar || a.name_en || '').localeCompare(b.name_ar || b.name_en || '', 'ar'));
+      const brands = [...new Set(items.map(p => key(p, 'brand')).filter(Boolean))];
+      const title = brands.length === 1 ? `كتالوج ${brands[0]}` : 'كتالوج المنتجات';
+      $('pv').innerHTML = `<div class="pvh"><b>${esc(title)}</b><span>${items.length} صنف · ${new Date().toLocaleDateString('en-GB')}</span></div><div class="pvg">` + items.map(p => `<div class="pc"><div class="pi">${p.image ? `<img src="${esc(p.image)}" alt="" onerror="this.style.visibility='hidden'">` : '✦'}</div>
+    <div class="pb">${esc(p.brand_ar)}${p.brand_en ? ` / <span dir="ltr">${esc(p.brand_en)}</span>` : ''}</div>
     <div class="pn1">${esc(p.name_ar)}</div><div class="pn2" dir="ltr">${esc(p.name_en)}</div>
-    ${p.barcode?`<svg class="pbc" data-c="${esc(p.barcode)}"></svg>`:''}</div>`).join('')+'</div>';
-  $('pv').querySelectorAll('svg.pbc').forEach(x=>bar(x,x.dataset.c,2,48));
-  const imgs=[...$('pv').querySelectorAll('img')];
-  await Promise.race([Promise.all(imgs.map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r}))),new Promise(r=>setTimeout(r,10000))]);
-  const t0=document.title;document.title='catalog-'+new Date().toISOString().slice(0,10);
-  addEventListener('afterprint',()=>{document.title=t0;$('pv').innerHTML=''},{once:true});
-  $('st').style.display='none';
-  print();
-};
+    ${p.barcode ? `<svg class="pbc" data-c="${esc(p.barcode)}"></svg>` : ''}</div>`).join('') + '</div>';
+      $('pv').querySelectorAll('svg.pbc').forEach(x => bar(x, x.dataset.c, 2, 48));
+      const imgs = [...$('pv').querySelectorAll('img')];
+      await Promise.race([Promise.all(imgs.map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r }))), new Promise(r => setTimeout(r, 10000))]);
+      const t0 = document.title; document.title = 'catalog-' + new Date().toISOString().slice(0, 10);
+      addEventListener('afterprint', () => { document.title = t0; $('pv').innerHTML = '' }, { once: true });
+      $('st').style.display = 'none';
+      print();
+    };
 
-const go=n=>{page=n;render();window.scrollTo({top:0})};
-$('pp').onclick=()=>go(page-1);$('pn').onclick=()=>go(page+1);
-$('ps').onchange=e=>{size=+e.target.value;go(1)};
+    // ===== تحويل الصور إلى Base64 مضغوط (حد الخلية في Sheets 50 ألف حرف، وفي Excel 32 ألف) =====
+    const MAXPX = 320, LIM = 22000;
+    const pool = async (arr, n, fn) => { let i = 0; await Promise.all(Array.from({ length: Math.min(n, arr.length) }, async () => { while (i < arr.length) await fn(arr[i++]) })) };
+    function shrink(src) {
+      return new Promise((ok, no) => {
+        const i = new Image(), tm = setTimeout(() => no(new Error('timeout')), 15000);
+        i.crossOrigin = 'anonymous';
+        i.onerror = () => { clearTimeout(tm); no(new Error('load')) };
+        i.onload = () => {
+          clearTimeout(tm); try {
+            const w = i.naturalWidth, h = i.naturalHeight; if (!w || !h) throw new Error('size');
+            const k = Math.min(1, MAXPX / Math.max(w, h)); let cw = Math.round(w * k), ch = Math.round(h * k), q = .82, out = '';
+            for (let n = 0; n < 10; n++) {
+              const c = document.createElement('canvas'); c.width = cw; c.height = ch; const x = c.getContext('2d');
+              x.fillStyle = '#fff'; x.fillRect(0, 0, cw, ch); x.drawImage(i, 0, 0, cw, ch);
+              out = c.toDataURL('image/jpeg', q); if (out.length <= LIM) break;
+              if (q > .5) q -= .1; else { cw = Math.round(cw * .85); ch = Math.round(ch * .85) }
+            }
+            out.length <= LIM ? ok(out) : no(new Error('big'));
+          } catch (e) { no(e) }
+        };
+        i.src = src;
+      })
+    }
+    async function toB64(u) {
+      if (u.startsWith('data:')) return u.length <= 45000 ? u : shrink(u);
+      try { return await shrink(u) } catch (e) { }               // محاولة مباشرة من المتصفح
+      const d = await post({ action: 'fetchImage', url: u });     // ثم عبر Apps Script إن حُجبت
+      return shrink(d.data);
+    }
+    function setImg(src) { editImg = src; imgClear = false; $('ip').src = src || ''; $('ipw').style.display = src ? 'flex' : 'none' }
+    $('ic').onclick = () => { imgClear = true; editImg = ''; $('ip').src = ''; $('ipw').style.display = 'none' };
+    $('b64').onclick = async () => {
+      const todo = P.filter(p => /^https?:\/\//i.test(p.image || ''));
+      if (!todo.length) return toast('كل الصور محفوظة بالفعل كـ Base64', 3500);
+      if (!confirm(`تحويل ${todo.length} صورة من روابط إلى Base64؟ قد يستغرق ذلك عدة دقائق، لا تغلق الصفحة.`)) return;
+      let ok = 0, fail = 0;
+      try {
+        for (let i = 0; i < todo.length; i += 12) {
+          const ch = todo.slice(i, i + 12), done = [];
+          toast(`جاري التحويل ${Math.min(i + 12, todo.length)} / ${todo.length}`, 0);
+          await pool(ch, 3, async p => { try { done.push({ ...p, image: await toB64(p.image) }); ok++ } catch (e) { fail++ } });
+          if (done.length) await post({ action: 'save', products: done });
+        }
+        await load();
+        toast(`تم تحويل ${ok} صورة.` + (fail ? ` تعذر ${fail} (روابط معطلة)؛ اعرضها من فلتر "الصورة: رابط خارجي".` : ''), 8000);
+      } catch (x) { toast(x.message, 5000) }
+    };
 
-// ===== مسح الباركود بالكاميرا =====
-let sc=null,done=false,busy=Promise.resolve(),onCode=null;
-const mobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(/Mac/.test(navigator.platform)&&navigator.maxTouchPoints>1);
-if(mobile&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){$('tscan').hidden=false;$('fscan').hidden=false}
-const stopScan=()=>{busy=busy.then(async()=>{const x=sc;sc=null;if(x){try{await x.stop()}catch(e){}try{x.clear()}catch(e){}}$('rd').innerHTML=''}).catch(()=>{})};
-async function startScan(){
-  done=false;$('rm').textContent='وجّه الكاميرا نحو الباركود';
-  if(!$('cam').open)$('cam').showModal();
-  try{
-    await lib(QR,'Html5Qrcode');
-    if(!$('cam').open)return;
-    const F=Html5QrcodeSupportedFormats;
-    const x=new Html5Qrcode('rd',{formatsToSupport:[F.EAN_13,F.EAN_8,F.UPC_A,F.UPC_E,F.CODE_128,F.CODE_39],verbose:false,useBarCodeDetectorIfSupported:true});
-    sc=x;
-    await x.start({facingMode:'environment'},{fps:15,qrbox:(w,h)=>({width:Math.floor(w*.9),height:Math.min(150,h)})},code=>{
-      if(done)return;done=true;const cb=onCode;$('cam').close();if(cb)cb(code);
-    },()=>{});
-  }catch(e){sc=null;$('rm').textContent='تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدامها ثم أعد المحاولة.'}
-}
-const scan=cb=>{onCode=cb;busy=busy.then(startScan).catch(()=>{})};
-$('cclose').onclick=()=>$('cam').close();$('cam').onclose=stopScan;
-$('fscan').onclick=()=>scan(code=>{$('fm').elements.barcode.value=code});
-$('tscan').onclick=()=>scan(code=>{
-  const z=v=>String(v).replace(/^0+/,'');
-  const m=P.find(p=>p.barcode===code)||P.find(p=>p.barcode&&z(p.barcode)===z(code));
-  if(m){$('s').value=m.barcode;page=1;render();return}
-  if(confirm(`لا يوجد منتج بالباركود ${code}. هل تريد إضافة منتج جديد به؟`)){editId='';$('fm').reset();$('fm').elements.barcode.value=code;$('dlg').showModal()}
-});
+    const go = n => { page = n; render(); window.scrollTo({ top: 0 }) };
+    $('pp').onclick = () => go(page - 1); $('pn').onclick = () => go(page + 1);
+    $('ps').onchange = e => { size = +e.target.value; go(1) };
 
-$('add').onclick=()=>{editId='';$('fm').reset();$('dlg').showModal()};
-$('cx').onclick=()=>$('dlg').close();
-$('tb').onclick=async e=>{
-  const ed=e.target.dataset.e,dl=e.target.dataset.d;
-  if(ed){const p=P.find(x=>x.id===ed);editId=ed;$('fm').reset();[...$('fm').elements].forEach(el=>{if(el.name&&p[el.name]!==undefined)el.value=String(p[el.name]).toUpperCase()==='FALSE'&&el.name==='active'?'FALSE':(el.name==='active'?'TRUE':p[el.name])});$('dlg').showModal()}
-  if(dl&&confirm('حذف هذا المنتج نهائياً؟')){try{toast('جاري الحذف...',0);await post({action:'delete',ids:[dl]});P=P.filter(x=>x.id!==dl);render();toast('تم الحذف')}catch(x){toast(x.message)}}
-};
-$('fm').onsubmit=async e=>{
-  const p=Object.fromEntries(new FormData($('fm')));p.id=editId;p.barcode=String(p.barcode||'').replace(/\s/g,'');
-  try{toast('جاري الحفظ...',0);await post({action:'save',products:[p]});await load();toast('تم الحفظ')}catch(x){toast(x.message)}
-};
+    // ===== مسح الباركود بالكاميرا =====
+    let sc = null, done = false, busy = Promise.resolve(), onCode = null;
+    const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (/Mac/.test(navigator.platform) && navigator.maxTouchPoints > 1);
+    if (mobile && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) { $('tscan').hidden = false; $('fscan').hidden = false }
+    const stopScan = () => { busy = busy.then(async () => { const x = sc; sc = null; if (x) { try { await x.stop() } catch (e) { } try { x.clear() } catch (e) { } } $('rd').innerHTML = '' }).catch(() => { }) };
+    async function startScan() {
+      done = false; $('rm').textContent = 'وجّه الكاميرا نحو الباركود';
+      if (!$('cam').open) $('cam').showModal();
+      try {
+        await lib(QR, 'Html5Qrcode');
+        if (!$('cam').open) return;
+        const F = Html5QrcodeSupportedFormats;
+        const x = new Html5Qrcode('rd', { formatsToSupport: [F.EAN_13, F.EAN_8, F.UPC_A, F.UPC_E, F.CODE_128, F.CODE_39], verbose: false, useBarCodeDetectorIfSupported: true });
+        sc = x;
+        await x.start({ facingMode: 'environment' }, { fps: 15, qrbox: (w, h) => ({ width: Math.floor(w * .9), height: Math.min(150, h) }) }, code => {
+          if (done) return; done = true; const cb = onCode; $('cam').close(); if (cb) cb(code);
+        }, () => { });
+      } catch (e) { sc = null; $('rm').textContent = 'تعذر تشغيل الكاميرا. اسمح للمتصفح باستخدامها ثم أعد المحاولة.' }
+    }
+    const scan = cb => { onCode = cb; busy = busy.then(startScan).catch(() => { }) };
+    $('cclose').onclick = () => $('cam').close(); $('cam').onclose = stopScan;
+    $('fscan').onclick = () => scan(code => { $('fm').elements.barcode.value = code });
+    $('tscan').onclick = () => scan(code => {
+      const z = v => String(v).replace(/^0+/, '');
+      const m = P.find(p => p.barcode === code) || P.find(p => p.barcode && z(p.barcode) === z(code));
+      if (m) { $('s').value = m.barcode; page = 1; render(); return }
+      if (confirm(`لا يوجد منتج بالباركود ${code}. هل تريد إضافة منتج جديد به؟`)) { editId = ''; $('fm').reset(); setImg(''); $('fm').elements.barcode.value = code; $('dlg').showModal() }
+    });
 
-$('exp').onclick=async()=>{await lib(XL,'XLSX');
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(P.map(p=>Object.fromEntries(COLS.map(c=>[c,p[c]??'']))),{header:COLS}),'Products');
-  XLSX.writeFile(wb,'products.xlsx');
-};
-$('imp').onclick=()=>$('f').click();
-$('f').onchange=async e=>{
-  const file=e.target.files[0];if(!file)return;e.target.value='';
-  try{
-    await lib(XL,'XLSX');const wb=XLSX.read(await file.arrayBuffer());
-    const rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:'',raw:false});
-    const items=rows.map(r=>{
-      const p={};COLS.forEach(c=>p[c]=String(r[c]??'').trim());
-      if(!p.brand_ar)p.brand_ar=String(r.brand??'').trim();
-      if(!p.category_ar)p.category_ar=String(r.category??'').trim();
-      if(!p.id){const m=p.barcode&&P.find(x=>x.barcode===p.barcode);if(m)p.id=m.id}
-      if(!p.active)p.active='TRUE';return p;
-    }).filter(p=>p.name_ar||p.name_en);
-    if(!items.length)return toast('لم أجد منتجات في الملف. تأكد من أسماء الأعمدة.',4000);
-    if(!confirm(`استيراد ${items.length} منتج؟ المنتجات ذات الباركود الموجود ستُحدَّث.`))return;
-    for(let i=0;i<items.length;i+=40){toast(`جاري الاستيراد ${Math.min(i+40,items.length)} / ${items.length}`,0);await post({action:'save',products:items.slice(i,i+40)})}
-    await load();toast('تم الاستيراد');
-  }catch(x){toast(x.message,4000)}
-};
-if(pw)post({action:'check'}).then(enter).catch(()=>{});
-</script>
+    $('add').onclick = () => { editId = ''; $('fm').reset(); setImg(''); $('dlg').showModal() };
+    $('cx').onclick = () => $('dlg').close();
+    $('tb').onclick = async e => {
+      const ed = e.target.dataset.e, dl = e.target.dataset.d;
+      if (ed) { const p = P.find(x => x.id === ed); editId = ed; $('fm').reset();[...$('fm').elements].forEach(el => { if (el.name && p[el.name] !== undefined) el.value = String(p[el.name]).toUpperCase() === 'FALSE' && el.name === 'active' ? 'FALSE' : (el.name === 'active' ? 'TRUE' : p[el.name]) }); const im0 = String(p.image || ''); if (im0.startsWith('data:')) $('fm').elements.image.value = ''; setImg(im0.startsWith('data:') ? im0 : ''); $('dlg').showModal() }
+      if (dl && confirm('حذف هذا المنتج نهائياً؟')) { try { toast('جاري الحذف...', 0); await post({ action: 'delete', ids: [dl] }); P = P.filter(x => x.id !== dl); render(); toast('تم الحذف') } catch (x) { toast(x.message) } }
+    };
+    $('fm').onsubmit = async e => {
+      e.preventDefault();
+      const p = Object.fromEntries(new FormData($('fm'))); p.id = editId; p.barcode = String(p.barcode || '').replace(/\s/g, '');
+      const v = String(p.image || '').trim();
+      try {
+        toast('جاري الحفظ...', 0);
+        if (/^https?:\/\//i.test(v) || v.startsWith('data:')) {
+          toast('جاري تحويل الصورة إلى Base64...', 0);
+          try { p.image = await toB64(v) } catch (x) { return toast('تعذر تحميل الصورة من هذا الرابط (معطّل أو محظور). صحّح الرابط أو اتركه فارغاً.', 6000) }
+        } else p.image = v ? v : (imgClear ? '' : editImg);
+        await post({ action: 'save', products: [p] }); await load(); $('dlg').close(); toast('تم الحفظ');
+      } catch (x) { toast(x.message) }
+    };
+
+    $('exp').onclick = async () => {
+      await lib(XL, 'XLSX');
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(P.map(p => Object.fromEntries(COLS.map(c => [c, c === 'image' && String(p.image).startsWith('data:') && String(p.image).length > 32000 ? '' : p[c] ?? '']))), { header: COLS }), 'Products');
+      XLSX.writeFile(wb, 'products.xlsx');
+    };
+    $('imp').onclick = () => $('f').click();
+    $('f').onchange = async e => {
+      const file = e.target.files[0]; if (!file) return; e.target.value = '';
+      try {
+        await lib(XL, 'XLSX'); const wb = XLSX.read(await file.arrayBuffer());
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { defval: '', raw: false });
+        const items = rows.map(r => {
+          const p = {}; COLS.forEach(c => p[c] = String(r[c] ?? '').trim());
+          if (!p.brand_ar) p.brand_ar = String(r.brand ?? '').trim();
+          if (!p.category_ar) p.category_ar = String(r.category ?? '').trim();
+          const m = (p.id && P.find(x => x.id === p.id)) || (p.barcode && P.find(x => x.barcode === p.barcode));
+          if (m) { if (!p.id) p.id = m.id; if (!p.image) p.image = m.image || '' }
+          if (!p.active) p.active = 'TRUE'; return p;
+        }).filter(p => p.name_ar || p.name_en);
+        if (!items.length) return toast('لم أجد منتجات في الملف. تأكد من أسماء الأعمدة.', 4000);
+        if (!confirm(`استيراد ${items.length} منتج؟ المنتجات ذات الباركود الموجود ستُحدَّث.`)) return;
+        let bad = 0;
+        for (let i = 0; i < items.length; i += 20) {
+          const ch = items.slice(i, i + 20);
+          toast(`جاري الاستيراد ${Math.min(i + 20, items.length)} / ${items.length}`, 0);
+          await pool(ch.filter(p => /^https?:\/\//i.test(p.image)), 3, async p => { try { p.image = await toB64(p.image) } catch (e) { bad++ } });
+          await post({ action: 'save', products: ch });
+        }
+        await load(); toast('تم الاستيراد' + (bad ? `. تعذر تحويل ${bad} صورة وبقيت كروابط (فلترها من "الصورة: رابط خارجي")` : ''), bad ? 8000 : 2500);
+      } catch (x) { toast(x.message, 4000) }
+    };
+    if (pw) post({ action: 'check' }).then(enter).catch(() => { });
+  </script>
 </body>
+
 </html>
