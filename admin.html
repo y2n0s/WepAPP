@@ -318,6 +318,7 @@
     }
 
     .pc {
+      position: relative;
       border: 1px solid #ccc;
       border-radius: 6px;
       padding: 8px;
@@ -333,7 +334,18 @@
       display: flex;
       justify-content: flex-end;
       direction: ltr;
-      height: 9mm
+      height: 13.5mm
+    }
+
+    .wm {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 55%;
+      height: auto;
+      opacity: .08;
+      pointer-events: none;
+      object-fit: contain
     }
 
     .lg img {
@@ -343,11 +355,11 @@
     }
 
     #ex .lg {
-      height: 52px
+      height: 78px
     }
 
     .pi {
-      height: 30mm;
+      height: 26mm;
       display: grid;
       place-items: center;
       color: #ccc;
@@ -356,7 +368,7 @@
 
     .pi img {
       max-width: 100%;
-      max-height: 30mm;
+      max-height: 26mm;
       object-fit: contain
     }
 
@@ -426,7 +438,7 @@
     @media print {
       @page {
         size: A4;
-        margin: 10mm
+        margin: 8mm
       }
 
       body>*:not(#pv) {
@@ -648,7 +660,7 @@
       if (!s.getAttribute('viewBox')) s.setAttribute('viewBox', `0 0 ${parseFloat(s.getAttribute('width'))} ${parseFloat(s.getAttribute('height'))}`);
     }
     const LOGO = 'logo.png'; // الشعار: ضعه في نفس مجلد ملف الـ html
-    const cardHTML = (p, src) => `<div class="pc"><div class="lg"><img src="${LOGO}" alt="" onerror="this.parentNode.style.display='none'"></div><div class="pi">${src ? `<img src="${esc(src)}" alt="" onerror="this.style.visibility='hidden'">` : '✦'}</div>
+    const cardHTML = (p, src) => `<div class="pc"><img class="wm" src="${LOGO}" alt="" aria-hidden="true" onerror="this.remove()"><div class="lg"><img src="${LOGO}" alt="" onerror="this.parentNode.style.display='none'"></div><div class="pi">${src ? `<img src="${esc(src)}" alt="" onerror="this.style.visibility='hidden'">` : '✦'}</div>
     <div class="pb">${esc(p.brand_ar)}${p.brand_en ? ` / <span dir="ltr">${esc(p.brand_en)}</span>` : ''}</div>
     <div class="pn1">${esc(p.name_ar)}</div><div class="pn2" dir="ltr">${esc(p.name_en)}</div>
     ${p.barcode ? `<svg class="pbc" data-c="${esc(p.barcode)}"></svg>` : ''}</div>`;
