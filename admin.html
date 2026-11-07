@@ -368,6 +368,44 @@
       direction: ltr
     }
 
+    #ex {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      width: 420px;
+      background: #fff
+    }
+
+    #ex .pc {
+      width: 420px;
+      padding: 18px;
+      border: 2px solid #ccc;
+      border-radius: 14px;
+      background: #fff;
+      gap: 10px;
+      break-inside: auto
+    }
+
+    #ex .pi {
+      height: 300px
+    }
+
+    #ex .pi img {
+      max-height: 300px
+    }
+
+    #ex .pb {
+      font-size: 20px
+    }
+
+    #ex .pn1 {
+      font-size: 26px
+    }
+
+    #ex .pn2 {
+      font-size: 19px
+    }
+
     @media print {
       @page {
         size: A4;
@@ -421,29 +459,36 @@
     </div>
     <div class="tb">
       <select id="fb" aria-label="الماركة">
-        <option value="">كل الماركات</option>
+        <option value>كل
+          الماركات</option>
       </select>
       <select id="fc" aria-label="التصنيف">
-        <option value="">كل التصنيفات</option>
+        <option value>كل
+          التصنيفات</option>
       </select>
       <select id="fs" aria-label="الحالة">
-        <option value="">الحالة: الكل</option>
+        <option value>الحالة:
+          الكل</option>
         <option value="on">ظاهر</option>
         <option value="off">مخفي</option>
       </select>
       <select id="fi" aria-label="الصورة">
-        <option value="">الصورة: الكل</option>
+        <option value>الصورة:
+          الكل</option>
         <option value="yes">بصورة</option>
         <option value="no">بدون صورة</option>
-        <option value="url">رابط خارجي (غير محوّلة)</option>
+        <option value="url">رابط خارجي (غير
+          محوّلة)</option>
       </select>
       <select id="fx" aria-label="الباركود">
-        <option value="">الباركود: الكل</option>
+        <option value>الباركود:
+          الكل</option>
         <option value="yes">بباركود</option>
         <option value="no">بدون باركود</option>
       </select>
       <select id="fk" aria-label="اكتمال البيانات">
-        <option value="">البيانات: الكل</option>
+        <option value>البيانات:
+          الكل</option>
         <option value="yes">مكتملة</option>
         <option value="no">ناقصة</option>
       </select>
@@ -454,6 +499,7 @@
       <button class="btn o s" id="sa"></button>
       <button class="btn o s" id="sn">إلغاء التحديد</button>
       <button class="btn g" id="pdf">📄 تصدير PDF</button>
+      <button class="btn g" id="img">🖼 حفظ كصور</button>
     </div>
     <div class="wrap">
       <table>
@@ -475,13 +521,17 @@
         id="pn">التالي</button>
       <select id="ps" aria-label="عدد المنتجات في الصفحة">
         <option value="20">20 في الصفحة</option>
-        <option value="50">50 في الصفحة</option>
-        <option value="100">100 في الصفحة</option>
+        <option value="50">50 في
+          الصفحة</option>
+        <option value="100">100 في
+          الصفحة</option>
       </select>
     </div>
     <p id="cnt" style="color:#6b5b70;text-align:center"></p>
     <p style="text-align:center;font-size:13px;color:#6b5b70">تصميم وبرمجة: <b style="color:var(--plum)">يونس البحر</b>
-      · Design &amp; development: <b style="color:var(--plum)">Younes AL-Bahar</b></p>
+      · Design &amp; development:
+      <b style="color:var(--plum)">Younes AL-Bahar</b>
+    </p>
   </div>
 
   <dialog id="dlg">
@@ -501,10 +551,10 @@
         <label>Name in English<input name="name_en" dir="ltr"></label>
         <label class="w">رابط الصورة (يُحفظ كـ Base64)<input name="image" dir="ltr"
             placeholder="الصق رابط الصورة https://..."></label>
-        <div class="w" id="ipw" style="display:none;align-items:center;gap:10px"><img id="ip" alt=""
+        <div class="w" id="ipw" style="display:none;align-items:center;gap:10px"><img id="ip" alt
             style="width:64px;height:64px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:#fff"><span
-            style="flex:1;font-size:13px;color:#6b5b70">الصورة الحالية محفوظة. الصق رابطاً جديداً
-            لاستبدالها.</span><button type="button" class="btn r s" id="ic">حذف الصورة</button></div>
+            style="flex:1;font-size:13px;color:#6b5b70">الصورة الحالية محفوظة.
+            الصق رابطاً جديداً لاستبدالها.</span><button type="button" class="btn r s" id="ic">حذف الصورة</button></div>
         <label>الوصف بالعربية<textarea name="description_ar" rows="2"></textarea></label>
         <label>Description in English<textarea name="description_en" rows="2" dir="ltr"></textarea></label>
       </div>
@@ -526,7 +576,7 @@
     const API = 'https://script.google.com/macros/s/AKfycbw9eTcGMp7MyLTrRdzr_86tLuNCPBZQ5DHCVZQLyjday8cCdncijRUWz5R9wQf00fl7/exec';
     const COLS = ['id', 'barcode', 'brand_ar', 'brand_en', 'category_ar', 'category_en', 'name_ar', 'name_en', 'description_ar', 'description_en', 'image', 'active'];
     const $ = id => document.getElementById(id);
-    const XL = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', QR = 'https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js', JB = 'https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js', libs = {};
+    const XL = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', QR = 'https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js', JB = 'https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js', H2C = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js', JSZ = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js', libs = {};
     const lib = (u, g) => window[g] ? Promise.resolve() : (libs[u] = libs[u] || new Promise((ok, no) => { const e = document.createElement('script'); e.src = u; e.onload = ok; e.onerror = () => { delete libs[u]; no(new Error('load')) }; document.head.appendChild(e) }));
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     let sel = new Set(), cur = [], page = 1, size = 20, P = [], pw = sessionStorage.getItem('pw') || '', editId = '', editImg = '', imgClear = false;
@@ -585,12 +635,48 @@
     $('sn').onclick = () => { sel.clear(); render() };
 
     // ===== تصدير PDF: بطاقات الأصناف عبر نافذة الطباعة (حفظ كـ PDF) =====
-    function bar(s, c, w, h) {
+    function bar(s, c, w, h, fs) {
       const f = /^\d{13}$/.test(c) ? 'EAN13' : /^\d{12}$/.test(c) ? 'UPC' : /^\d{8}$/.test(c) ? 'EAN8' : 'CODE128';
-      const o = { height: h, width: w, fontSize: 14, margin: 10, background: '#fff', lineColor: '#000', textMargin: 2 };
+      const o = { height: h, width: w, fontSize: fs || 14, margin: 10, background: '#fff', lineColor: '#000', textMargin: 2 };
       try { JsBarcode(s, c, { ...o, format: f }) } catch (e) { try { JsBarcode(s, c, { ...o, format: 'CODE128' }) } catch (e2) { s.setAttribute('viewBox', '0 0 220 34'); s.innerHTML = '<text x="110" y="23" text-anchor="middle" font-size="16">' + esc(c) + '</text>'; return } }
       if (!s.getAttribute('viewBox')) s.setAttribute('viewBox', `0 0 ${parseFloat(s.getAttribute('width'))} ${parseFloat(s.getAttribute('height'))}`);
     }
+    const cardHTML = (p, src) => `<div class="pc"><div class="pi">${src ? `<img src="${esc(src)}" alt="" onerror="this.style.visibility='hidden'">` : '✦'}</div>
+    <div class="pb">${esc(p.brand_ar)}${p.brand_en ? ` / <span dir="ltr">${esc(p.brand_en)}</span>` : ''}</div>
+    <div class="pn1">${esc(p.name_ar)}</div><div class="pn2" dir="ltr">${esc(p.name_en)}</div>
+    ${p.barcode ? `<svg class="pbc" data-c="${esc(p.barcode)}"></svg>` : ''}</div>`;
+    const dl = (b, n) => { const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = n; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000) };
+
+    // ===== حفظ بطاقات الأصناف كصور PNG عالية الدقة (صورة واحدة، أو ملف ZIP لعدة أصناف) =====
+    $('img').onclick = async () => {
+      const items = sel.size ? P.filter(p => sel.has(p.id)) : filtered();
+      if (!items.length) return toast('لا توجد أصناف للحفظ');
+      if (!sel.size && !confirm(`لم تحدد أصنافاً. حفظ كل النتائج الحالية (${items.length} صنف) كصور؟`)) return;
+      toast('جاري التجهيز...', 0);
+      try { await Promise.all([lib(JB, 'JsBarcode'), lib(H2C, 'html2canvas'), items.length > 1 ? lib(JSZ, 'JSZip') : 0]) } catch (e) { return toast('تعذر تحميل أدوات الحفظ. تحقق من الاتصال وأعد المحاولة.', 4000) }
+      try { await document.fonts.ready } catch (e) { }
+      const zip = items.length > 1 ? new JSZip() : null, box = document.createElement('div'); box.id = 'ex'; document.body.appendChild(box);
+      let ok = 0;
+      try {
+        for (let i = 0; i < items.length; i++) {
+          const p = items[i]; toast(`جاري إنشاء الصور ${i + 1} / ${items.length}`, 0);
+          let src = p.image || '';
+          if (/^https?:\/\//i.test(src)) { try { src = await toB64(src) } catch (e) { src = '' } }  // الروابط تُحمَّل عبر الخادم لتجنب حجب المتصفح
+          box.innerHTML = cardHTML(p, src);
+          const x = box.querySelector('svg.pbc'); if (x) bar(x, x.dataset.c, 3, 90, 20);
+          const im = box.querySelector('img'); if (im && im.decode) await im.decode().catch(() => { });
+          const cv = await html2canvas(box.firstElementChild, { scale: 3, backgroundColor: '#fff', useCORS: true, logging: false });
+          const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
+          const name = `${String(p.barcode || p.id).replace(/[^\w-]/g, '')}.png`;
+          if (zip) zip.file(`${String(i + 1).padStart(3, '0')}-${name}`, blob); else dl(blob, name);
+          ok++;
+        }
+        if (zip) { toast('جاري ضغط الملفات...', 0); dl(await zip.generateAsync({ type: 'blob' }), 'cards.zip') }
+        toast(`تم حفظ ${ok} صورة`);
+      } catch (x) { toast('تعذر إنشاء الصور: ' + x.message, 5000) }
+      box.remove();
+    };
+
     $('pdf').onclick = async () => {
       let items = sel.size ? P.filter(p => sel.has(p.id)) : filtered();
       if (!items.length) return toast('لا توجد أصناف للتصدير');
@@ -600,10 +686,7 @@
       items = [...items].sort((a, b) => key(a, 'brand').localeCompare(key(b, 'brand'), 'ar') || (a.name_ar || a.name_en || '').localeCompare(b.name_ar || b.name_en || '', 'ar'));
       const brands = [...new Set(items.map(p => key(p, 'brand')).filter(Boolean))];
       const title = brands.length === 1 ? `كتالوج ${brands[0]}` : 'كتالوج المنتجات';
-      $('pv').innerHTML = `<div class="pvh"><b>${esc(title)}</b><span>${items.length} صنف · ${new Date().toLocaleDateString('en-GB')}</span></div><div class="pvg">` + items.map(p => `<div class="pc"><div class="pi">${p.image ? `<img src="${esc(p.image)}" alt="" onerror="this.style.visibility='hidden'">` : '✦'}</div>
-    <div class="pb">${esc(p.brand_ar)}${p.brand_en ? ` / <span dir="ltr">${esc(p.brand_en)}</span>` : ''}</div>
-    <div class="pn1">${esc(p.name_ar)}</div><div class="pn2" dir="ltr">${esc(p.name_en)}</div>
-    ${p.barcode ? `<svg class="pbc" data-c="${esc(p.barcode)}"></svg>` : ''}</div>`).join('') + '</div>';
+      $('pv').innerHTML = `<div class="pvh"><b>${esc(title)}</b><span>${items.length} صنف · ${new Date().toLocaleDateString('en-GB')}</span></div><div class="pvg">` + items.map(p => cardHTML(p, p.image)).join('') + '</div>';
       $('pv').querySelectorAll('svg.pbc').forEach(x => bar(x, x.dataset.c, 2, 48));
       const imgs = [...$('pv').querySelectorAll('img')];
       await Promise.race([Promise.all(imgs.map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r }))), new Promise(r => setTimeout(r, 10000))]);
@@ -614,7 +697,7 @@
     };
 
     // ===== تحويل الصور إلى Base64 مضغوط (حد الخلية في Sheets 50 ألف حرف، وفي Excel 32 ألف) =====
-    const MAXPX = 320, LIM = 22000;
+    const MAXPX = 420, LIM = 32000;
     const pool = async (arr, n, fn) => { let i = 0; await Promise.all(Array.from({ length: Math.min(n, arr.length) }, async () => { while (i < arr.length) await fn(arr[i++]) })) };
     function shrink(src) {
       return new Promise((ok, no) => {
