@@ -166,7 +166,9 @@ $('grid').onclick=e=>{
 $('items').onclick=e=>{const id=e.target.dataset.rm;if(id){delete cart[id];save()}};
 $('items').onchange=e=>{const id=e.target.dataset.q;if(id){cart[id]=Math.max(1,parseInt(e.target.value)||1);store.set('cart',cart)}};
 $('fab').onclick=()=>{$('dlg').showModal();lib(XL,'XLSX').catch(()=>{})};$('cl').onclick=()=>$('dlg').close();$('bx').onclick=()=>$('bd').close();
-let dt;$('q').oninput=()=>{clearTimeout(dt);dt=setTimeout(()=>{shown=48;show()},180)};
+// رابط بحث قابل للمشاركة: ?q=الباركود أو الاسم (يُحدَّث الرابط أثناء الكتابة)
+const syncUrl=()=>{try{const v=$('q').value.trim();history.replaceState(null,'',v?'?q='+encodeURIComponent(v):location.pathname)}catch(e){}};
+let dt;$('q').oninput=()=>{clearTimeout(dt);dt=setTimeout(()=>{shown=48;show();syncUrl()},180)};
 ['fc','fb'].forEach(i=>$(i).onchange=()=>{shown=48;show()});
 $('lg').onclick=()=>{L=L==='ar'?'en':'ar';store.set('lang',L);ui()};
 ['n1','n2','n3'].forEach(i=>{$(i).value=store.get(i,'');$(i).onchange=()=>store.set(i,$(i).value)});
@@ -206,7 +208,7 @@ async function startScan(){
       const z=v=>String(v).replace(/^0+/,'');
       const m=P.find(p=>p.barcode===code)||P.find(p=>p.barcode&&z(p.barcode)===z(code));
       $('q').value=m?m.barcode:code;$('fc').value='';$('fb').value='';shown=48;
-      $('cam').close();show();window.scrollTo({top:0,behavior:'smooth'});
+      $('cam').close();show();syncUrl();window.scrollTo({top:0,behavior:'smooth'});
     },()=>{});
   }catch(e){sc=null;$('rm').textContent=t('camErr')}
 }
@@ -231,6 +233,7 @@ async function load(){
   }catch(e){if(!P.length){$('grid').innerHTML=`<p class="msg">${t('fail')}</p>`;return}}
   ui();
 }
+const u0=new URLSearchParams(location.search).get('q');if(u0)$('q').value=u0.trim();
 load();
 </script>
 </body>
