@@ -111,6 +111,7 @@
 
     .card {
       position: relative;
+      isolation: isolate;
       background: var(--paper);
       border: 1px solid var(--line);
       border-radius: 10px;
@@ -137,7 +138,12 @@
       background: none;
       opacity: .08;
       pointer-events: none;
-      z-index: 2
+      z-index: -1;
+      mix-blend-mode: normal
+    }
+
+    .card>img {
+      mix-blend-mode: multiply
     }
 
     .card .lg img {
