@@ -329,8 +329,25 @@
       gap: 4px
     }
 
+    .lg {
+      display: flex;
+      justify-content: flex-end;
+      direction: ltr;
+      height: 9mm
+    }
+
+    .lg img {
+      height: 100%;
+      width: auto;
+      object-fit: contain
+    }
+
+    #ex .lg {
+      height: 52px
+    }
+
     .pi {
-      height: 34mm;
+      height: 30mm;
       display: grid;
       place-items: center;
       color: #ccc;
@@ -339,7 +356,7 @@
 
     .pi img {
       max-width: 100%;
-      max-height: 34mm;
+      max-height: 30mm;
       object-fit: contain
     }
 
@@ -630,7 +647,8 @@
       try { JsBarcode(s, c, { ...o, format: f }) } catch (e) { try { JsBarcode(s, c, { ...o, format: 'CODE128' }) } catch (e2) { s.setAttribute('viewBox', '0 0 220 34'); s.innerHTML = '<text x="110" y="23" text-anchor="middle" font-size="16">' + esc(c) + '</text>'; return } }
       if (!s.getAttribute('viewBox')) s.setAttribute('viewBox', `0 0 ${parseFloat(s.getAttribute('width'))} ${parseFloat(s.getAttribute('height'))}`);
     }
-    const cardHTML = (p, src) => `<div class="pc"><div class="pi">${src ? `<img src="${esc(src)}" alt="" onerror="this.style.visibility='hidden'">` : '✦'}</div>
+    const LOGO = 'logo.png'; // الشعار: ضعه في نفس مجلد ملف الـ html
+    const cardHTML = (p, src) => `<div class="pc"><div class="lg"><img src="${LOGO}" alt="" onerror="this.parentNode.style.display='none'"></div><div class="pi">${src ? `<img src="${esc(src)}" alt="" onerror="this.style.visibility='hidden'">` : '✦'}</div>
     <div class="pb">${esc(p.brand_ar)}${p.brand_en ? ` / <span dir="ltr">${esc(p.brand_en)}</span>` : ''}</div>
     <div class="pn1">${esc(p.name_ar)}</div><div class="pn2" dir="ltr">${esc(p.name_en)}</div>
     ${p.barcode ? `<svg class="pbc" data-c="${esc(p.barcode)}"></svg>` : ''}</div>`;
@@ -659,7 +677,7 @@
             if (bw && bh) { x.style.width = bw + 'px'; x.style.height = bh + 'px' }
             x.style.alignSelf = 'center'; x.style.marginTop = '0';
           }
-          const im = box.querySelector('img'); if (im && im.decode) await im.decode().catch(() => { });
+          await Promise.all([...box.querySelectorAll('img')].map(i => i.decode ? i.decode().catch(() => { }) : 0));
           const cv = await html2canvas(box.firstElementChild, { scale: 3, backgroundColor: '#fff', useCORS: true, logging: false });
           const blob = await new Promise(r => cv.toBlob(r, 'image/png'));
           const name = `${String(p.barcode || p.id).replace(/[^\w-]/g, '')}.png`;
